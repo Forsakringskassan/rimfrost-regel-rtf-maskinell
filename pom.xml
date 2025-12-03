@@ -9,13 +9,13 @@
   </parent>
 
   <groupId>com.example</groupId>
-  <artifactId>rimfrost-regel-ratt-till-forsakring</artifactId>
+  <artifactId>rimfrost-regel-rtf-maskinell</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
   <properties>
     <violations.maxViolations>0</violations.maxViolations>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-
+    <version.org.kie.kogito>999-SNAPSHOT</version.org.kie.kogito>
   </properties>
 
   <dependencies>
@@ -26,12 +26,12 @@
     <dependency>
       <groupId>se.fk.rimfrost.api.folkbokforing</groupId>
       <artifactId>rimfrost-folkbokforing-api-jaxrs-spec</artifactId>
-      <version>1.4.4</version>
+      <version>1.5.0</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.api.arbetsgivare</groupId>
       <artifactId>rimfrost-arbetsgivare-api-jaxrs-spec</artifactId>
-      <version>1.0.5</version>
+      <version>1.1.0</version>
     </dependency>
     <dependency>
       <groupId>se.fk.github.jaxrsclientfactory</groupId>
@@ -49,9 +49,43 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>se.fk.rimfrost</groupId>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>kogito-quarkus-test-utils</artifactId>
+      <version>10.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>kafka</artifactId>
+      <version>1.20.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.20.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>3.9.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>se.fk.rimfrost.regel.rtf.maskinell</groupId>
       <artifactId>rimfrost-vah-regel-rtf-api</artifactId>
-      <version>0.1.1</version>
+      <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>se.fk.rimfrost</groupId>
+      <artifactId>rimfrost-service-kundbehovsflode-openapi-jaxrs-spec</artifactId>
+      <version>1.2.0</version>
     </dependency>
   </dependencies>
 
