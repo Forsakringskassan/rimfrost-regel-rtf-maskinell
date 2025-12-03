@@ -15,12 +15,7 @@ public class ArbetsgivareMapper
    {
       //TOOD hämta all info från responset
       return ImmutableArbetsgivareResponse.builder()
-            .organisationsnamn("CoolJobb AB")
-            .organisationsnummer("1234-567890")
-            .anstallningsdag(LocalDate.now().minusYears(2))
-            .arbetstidProcent(100)
-            .lonFrom(LocalDate.now().minusYears(1))
-            .loneSumma(40000)
+              .anstallningar(apiResponse.getAnstallningar())
             .build();
    }
 }

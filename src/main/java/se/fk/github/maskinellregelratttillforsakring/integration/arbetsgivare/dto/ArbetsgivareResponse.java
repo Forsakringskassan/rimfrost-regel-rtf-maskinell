@@ -11,21 +11,6 @@ import java.util.List;
 public interface ArbetsgivareResponse
 {
 
-   String organisationsnummer();
+   List<Anstallning> anstallningar();
 
-   String organisationsnamn();
-
-   int arbetstidProcent();
-
-   int loneSumma();
-
-   LocalDate anstallningsdag();
-
-   @Nullable
-   LocalDate sistaAnstallningsdag();
-
-   LocalDate lonFrom();
-
-   @Nullable
-   LocalDate lonTom();
 }

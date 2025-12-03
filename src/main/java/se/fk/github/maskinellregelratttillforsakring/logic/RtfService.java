@@ -39,14 +39,20 @@ public class RtfService
       var kundbehovflodesResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(kundbehovsflodeRequest);
 
       var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();
-      // var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
-      folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+      var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
       var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer())
             .build();
-      // var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
-      arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
-      var rattTillForsakring = RattTillForsakring.UTREDNING;
+      var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
 
+       if (folkbokfordResponse == null) {
+           System.out.printf("folkbokfordResponse is null. anstallningar size: %s%n", arbetsgivareResponse.anstallningar().size());
+          if (arbetsgivareResponse.anstallningar().isEmpty()) {
+              rattTillForsakring = RattTillForsakring.NEJ;
+          } else {
+              rattTillForsakring = RattTillForsakring.UTREDNING;
+          }
+      }
       kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
    }
 

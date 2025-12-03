@@ -1,8 +1,8 @@
 {
-  "priority": 100,
+  "priority": 1,
   "request": {
     "method": "GET",
-    "urlPathPattern": "/arbetsgivare/.+4444$"
+    "urlPathPattern": "/arbetsgivare/19990101-4444"
   },
   "response": {
     "status": 200,
