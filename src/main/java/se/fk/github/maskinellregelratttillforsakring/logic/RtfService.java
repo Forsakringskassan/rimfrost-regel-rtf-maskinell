@@ -10,7 +10,6 @@ import se.fk.github.maskinellregelratttillforsakring.integration.kafka.RtfMaskin
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.KundbehovsflodeAdapter;
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableKundbehovsflodeRequest;
 import se.fk.github.maskinellregelratttillforsakring.logic.dto.GetRtfDataRequest;
-import se.fk.github.maskinellregelratttillforsakring.logic.dto.GetRtfDataResponse;
 import se.fk.rimfrost.regel.rtf.maskinell.RattTillForsakring;
 
 @ApplicationScoped
@@ -47,14 +46,14 @@ public class RtfService
 
       if (folkbokfordResponse == null)
       {
-         System.out.printf("folkbokfordResponse is null. anstallningar size: %s%n", arbetsgivareResponse.anstallningar().size());
-         if (arbetsgivareResponse.anstallningar().isEmpty())
+         System.out.printf("folkbokfordResponse is null. harAnstallning: %s%n", arbetsgivareResponse.harAnstallning());
+         if (arbetsgivareResponse.harAnstallning())
          {
-            rattTillForsakring = RattTillForsakring.NEJ;
+            rattTillForsakring = RattTillForsakring.UTREDNING;
          }
          else
          {
-            rattTillForsakring = RattTillForsakring.UTREDNING;
+            rattTillForsakring = RattTillForsakring.NEJ;
          }
       }
       kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));

@@ -6,18 +6,6 @@ import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.mo
 @Value.Immutable
 public interface FolkbokfordResponse
 {
-   String id();
+    boolean folkbokford();
 
-   String fornamn();
-
-   String efternamn();
-
-   Kon kon();
-
-   public enum Kon
-   {
-      MAN, KVINNA
-   }
-
-   Adress adress();
 }
