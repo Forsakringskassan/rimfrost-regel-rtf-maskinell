@@ -6,6 +6,6 @@ import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.mo
 @Value.Immutable
 public interface FolkbokfordResponse
 {
-    boolean folkbokford();
+   boolean folkbokford();
 
 }

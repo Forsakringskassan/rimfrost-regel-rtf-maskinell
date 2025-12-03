@@ -8,11 +8,13 @@ import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.mod
 import java.time.LocalDate;
 
 @ApplicationScoped
-public class ArbetsgivareMapper {
+public class ArbetsgivareMapper
+{
 
-    public ArbetsgivareResponse toArbetsgivareResponse(GetArbetsgivare200Response apiResponse) {
-        return ImmutableArbetsgivareResponse.builder()
-                .harAnstallning(!apiResponse.getAnstallningar().isEmpty())
-                .build();
-    }
+   public ArbetsgivareResponse toArbetsgivareResponse(GetArbetsgivare200Response apiResponse)
+   {
+      return ImmutableArbetsgivareResponse.builder()
+            .harAnstallning(!apiResponse.getAnstallningar().isEmpty())
+            .build();
+   }
 }

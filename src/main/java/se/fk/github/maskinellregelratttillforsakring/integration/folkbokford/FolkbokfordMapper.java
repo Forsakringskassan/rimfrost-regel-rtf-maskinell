@@ -6,15 +6,18 @@ import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto
 import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.FolkbokforingPersnrGet200Response;
 
 @ApplicationScoped
-public class FolkbokfordMapper {
+public class FolkbokfordMapper
+{
 
-    public FolkbokfordResponse toFolkbokfordResponse(FolkbokforingPersnrGet200Response apiResponse) {
-        if (apiResponse == null) {
-            return null;
-        }
-        return ImmutableFolkbokfordResponse.builder()
-                .folkbokford(true)
-                .build();
-    }
+   public FolkbokfordResponse toFolkbokfordResponse(FolkbokforingPersnrGet200Response apiResponse)
+   {
+      if (apiResponse == null)
+      {
+         return null;
+      }
+      return ImmutableFolkbokfordResponse.builder()
+            .folkbokford(true)
+            .build();
+   }
 
 }
