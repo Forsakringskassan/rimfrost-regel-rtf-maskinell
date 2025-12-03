@@ -45,13 +45,17 @@ public class RtfService
       var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
       RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
 
-       if (folkbokfordResponse == null) {
-           System.out.printf("folkbokfordResponse is null. anstallningar size: %s%n", arbetsgivareResponse.anstallningar().size());
-          if (arbetsgivareResponse.anstallningar().isEmpty()) {
-              rattTillForsakring = RattTillForsakring.NEJ;
-          } else {
-              rattTillForsakring = RattTillForsakring.UTREDNING;
-          }
+      if (folkbokfordResponse == null)
+      {
+         System.out.printf("folkbokfordResponse is null. anstallningar size: %s%n", arbetsgivareResponse.anstallningar().size());
+         if (arbetsgivareResponse.anstallningar().isEmpty())
+         {
+            rattTillForsakring = RattTillForsakring.NEJ;
+         }
+         else
+         {
+            rattTillForsakring = RattTillForsakring.UTREDNING;
+         }
       }
       kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
    }

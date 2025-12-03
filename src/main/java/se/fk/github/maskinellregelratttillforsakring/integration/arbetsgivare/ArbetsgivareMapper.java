@@ -15,7 +15,7 @@ public class ArbetsgivareMapper
    {
       //TOOD hämta all info från responset
       return ImmutableArbetsgivareResponse.builder()
-              .anstallningar(apiResponse.getAnstallningar())
+            .anstallningar(apiResponse.getAnstallningar())
             .build();
    }
 }
