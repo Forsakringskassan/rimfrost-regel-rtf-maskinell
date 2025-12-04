@@ -24,7 +24,6 @@ public class RtfMapper
             .kogitoprocist(request.kogitoprocist())
             .kogitoproctype(request.kogitoproctype())
             .kogitoprocversion(request.kogitoprocversion())
-            .kogitoprocrefid(request.kogitoprocrefid())
             .rattTillForsakring(rattTillForsakring)
             .build();
    }

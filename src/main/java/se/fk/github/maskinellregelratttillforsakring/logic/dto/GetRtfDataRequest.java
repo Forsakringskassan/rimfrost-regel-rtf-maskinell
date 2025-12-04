@@ -27,6 +27,4 @@ public interface GetRtfDataRequest
    String kogitoproctype();
 
    String kogitoprocversion();
-
-   String kogitoprocrefid();
 }
