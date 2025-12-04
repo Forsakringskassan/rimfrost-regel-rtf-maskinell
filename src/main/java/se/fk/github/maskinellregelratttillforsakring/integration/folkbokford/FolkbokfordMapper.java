@@ -2,7 +2,6 @@ package se.fk.github.maskinellregelratttillforsakring.integration.folkbokford;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto.FolkbokfordResponse;
-import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto.FolkbokfordResponse.Kon;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto.ImmutableFolkbokfordResponse;
 import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.FolkbokforingPersnrGet200Response;
 
@@ -12,13 +11,17 @@ public class FolkbokfordMapper
 
    public FolkbokfordResponse toFolkbokfordResponse(FolkbokforingPersnrGet200Response apiResponse)
    {
-      //TODO ta data från apiresponse
+      if (apiResponse == null)
+      {
+         return null;
+      }
       return ImmutableFolkbokfordResponse.builder()
-            .kon(apiResponse.getKon() == se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.Kon.K
-                  ? Kon.KVINNA
-                  : Kon.MAN)
+            .id(apiResponse.getId())
             .fornamn(apiResponse.getFornamn())
             .efternamn(apiResponse.getEfternamn())
+            .utdelningsadress(apiResponse.getAdress().getUtdelningsadress())
+            .postnummer(apiResponse.getAdress().getPostnummer())
+            .postort(apiResponse.getAdress().getPostort())
             .build();
    }
 

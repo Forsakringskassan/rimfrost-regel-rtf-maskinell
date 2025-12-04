@@ -1,8 +1,8 @@
 {
-  "priority": 100,
+  "priority": 1,
   "request": {
     "method": "GET",
-    "urlPathPattern": "/folkbokforing/.+4444$"
+    "urlPathPattern": "/folkbokforing/19990101-4444"
   },
   "response": {
     "status": 404,

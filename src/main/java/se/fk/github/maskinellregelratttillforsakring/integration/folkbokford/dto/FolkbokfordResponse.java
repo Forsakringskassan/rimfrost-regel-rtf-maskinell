@@ -1,18 +1,21 @@
 package se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto;
 
 import org.immutables.value.Value;
+import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.Adress;
 
 @Value.Immutable
 public interface FolkbokfordResponse
 {
+   String id();
+
    String fornamn();
 
    String efternamn();
 
-   Kon kon();
+   String utdelningsadress();
 
-   public enum Kon
-   {
-      MAN, KVINNA
-   }
+   String postnummer();
+
+   String postort();
+
 }

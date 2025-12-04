@@ -15,28 +15,4 @@ public interface KundbehovsflodeResponse
 
    String personnummer();
 
-   List<Ersattning> ersattning();
-
-   @Value.Immutable
-   public interface Ersattning
-   {
-
-      UUID ersattningsId();
-
-      String ersattningsTyp();
-
-      int omfattningsProcent();
-
-      int belopp();
-
-      int berakningsgrund();
-
-      @Nullable
-      String beslutsutfall();
-
-      LocalDate from();
-
-      LocalDate tom();
-   }
-
 }

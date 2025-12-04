@@ -1,31 +1,25 @@
 package se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.dto;
 
-import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Null;
 import org.immutables.value.Value;
-import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.model.Anstallning;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
-import java.util.List;
 
 @Value.Immutable
 public interface ArbetsgivareResponse
 {
 
-   String organisationsnummer();
-
-   String organisationsnamn();
-
-   int arbetstidProcent();
-
-   int loneSumma();
-
-   LocalDate anstallningsdag();
+   @Nullable
+   String organisationsNr();
 
    @Nullable
-   LocalDate sistaAnstallningsdag();
-
-   LocalDate lonFrom();
+   Integer arbetstid();
 
    @Nullable
-   LocalDate lonTom();
+   LocalDate startdag();
+
+   @Nullable
+   LocalDate slutdag();
+
 }
