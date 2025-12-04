@@ -40,12 +40,14 @@ public class RtfService
       var kundbehovflodesResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(kundbehovsflodeRequest);
       // Evaluera logik
       var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();
-      var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+      //var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+      folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
       var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer())
             .build();
-      var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
-/*      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
-
+      // var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+      arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+      /*      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
+      
       if (folkbokfordResponse == null)
       {
          System.out.printf("folkbokfordResponse is null. harAnstallning: %s%n", harAnstallning(arbetsgivareResponse));
