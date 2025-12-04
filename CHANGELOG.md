@@ -2,6 +2,29 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.2.0 (2025-12-04)
+
+### Bug Fixes
+
+-  reformat pom ([d7576](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/d7576c552004412) Ulf Slunga)  
+-  mvn spotless apply ([dc2e1](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/dc2e1c4afb7c94d) Ulf Slunga)  
+-  bumpar version av arbetsgivar-api. nullable i anställnings-data i integration. tar bort felaktiga imports ([c525f](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/c525fcf80c047cc) Ulf Slunga)  
+-  mvn spotless apply ([b2930](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/b29302f2c51d5dc) Ulf Slunga)  
+-  Ta bort ersättning från KundbehovsflodeResponse i integrationen eftersom regeln ej behöver infon för beslut ([f3b3f](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/f3b3f97df3ac19e) Ulf Slunga)  
+-  Hantera logik för folkbokford i RtfService för att kunna spara det som underlag efter regeln ([2eb9f](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2eb9f049d1a8d2f) Ulf Slunga)  
+-  Hantera logik för arbetsgivare i RtfService för att kunna spara det som underlag efter regeln ([79811](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/79811341aad160b) Ulf Slunga)  
+-  mvn spotless apply ([1daa7](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1daa7bb04edc493) Ulf Slunga)  
+-  minimerar datat i integrationslagret som behövs av regeln ([3693d](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/3693d172aa1cb75) Ulf Slunga)  
+-  mvn spotless apply ([81e2b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/81e2b2b770b1a81) Ulf Slunga)  
+
+### Other changes
+
+**Merge branch 'main' into feature/FKPOC-199-kundbehovsflode-full-logik**
+
+
+[11627](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1162706d11ac939) Ulf Slunga *2025-12-04 08:35:52*
+
+
 ## 0.1.0 (2025-12-03)
 
 ### Bug Fixes
