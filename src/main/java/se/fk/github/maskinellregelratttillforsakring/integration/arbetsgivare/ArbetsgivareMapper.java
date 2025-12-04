@@ -9,28 +9,32 @@ import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.mod
 import java.time.LocalDate;
 
 @ApplicationScoped
-public class ArbetsgivareMapper {
+public class ArbetsgivareMapper
+{
 
-    public ArbetsgivareResponse toArbetsgivareResponse(GetArbetsgivare200Response apiResponse) {
+   public ArbetsgivareResponse toArbetsgivareResponse(GetArbetsgivare200Response apiResponse)
+   {
 
-        if (apiResponse.getAnstallningar().isEmpty()) {
-            return ImmutableArbetsgivareResponse.builder()
-                    .organisationsNr("")
-                    .arbetstid(0)
-                    .startdag("")
-                    .slutdag("")
-                    .build();
-        }
-        Anstallning anstallning = apiResponse.getAnstallningar().getLast();
-        String slutdag = "";
-        if (anstallning.getSlutdag() != null) {
-            slutdag = anstallning.getSlutdag();
-        }
-        return ImmutableArbetsgivareResponse.builder()
-                .organisationsNr(anstallning.getOrganisation().getNummer())
-                .arbetstid(anstallning.getArbetstid())
-                .startdag(anstallning.getStartdag().toString())
-                .slutdag(slutdag)
-                .build();
-    }
+      if (apiResponse.getAnstallningar().isEmpty())
+      {
+         return ImmutableArbetsgivareResponse.builder()
+               .organisationsNr("")
+               .arbetstid(0)
+               .startdag("")
+               .slutdag("")
+               .build();
+      }
+      Anstallning anstallning = apiResponse.getAnstallningar().getLast();
+      String slutdag = "";
+      if (anstallning.getSlutdag() != null)
+      {
+         slutdag = anstallning.getSlutdag();
+      }
+      return ImmutableArbetsgivareResponse.builder()
+            .organisationsNr(anstallning.getOrganisation().getNummer())
+            .arbetstid(anstallning.getArbetstid())
+            .startdag(anstallning.getStartdag().toString())
+            .slutdag(slutdag)
+            .build();
+   }
 }
