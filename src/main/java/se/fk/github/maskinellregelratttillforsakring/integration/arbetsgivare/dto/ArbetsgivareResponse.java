@@ -7,18 +7,19 @@ import javax.annotation.Nullable;
 import java.time.LocalDate;
 
 @Value.Immutable
-public interface ArbetsgivareResponse {
+public interface ArbetsgivareResponse
+{
 
-    @Nullable
-    String organisationsNr();
+   @Nullable
+   String organisationsNr();
 
-    @Nullable
-    Integer arbetstid();
+   @Nullable
+   Integer arbetstid();
 
-    @Nullable
-    LocalDate startdag();
+   @Nullable
+   LocalDate startdag();
 
-    @Nullable
-    LocalDate slutdag();
+   @Nullable
+   LocalDate slutdag();
 
 }
