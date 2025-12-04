@@ -5,7 +5,9 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface ArbetsgivareResponse
 {
-
-   boolean harAnstallning();
+    String organisationsNr();
+    Integer arbetstid();
+    String startdag();
+    String slutdag();
 
 }
