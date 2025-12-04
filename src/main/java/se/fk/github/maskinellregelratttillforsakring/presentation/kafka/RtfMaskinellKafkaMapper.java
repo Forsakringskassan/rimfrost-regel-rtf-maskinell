@@ -68,7 +68,6 @@ public class RtfMaskinellKafkaMapper
             .kogitoprocist(rtfRequest.getKogitoprocist())
             .kogitoprocversion(rtfRequest.getKogitoprocversion())
             .kogitoproctype(rtfRequest.getKogitoproctype().getValue())
-            .kogitoprocrefid(rtfRequest.getKogitoprocrefid())
             .kundbehovsflodeId(UUID.fromString(rtfRequest.getData().getKundbehovsflodeId()))
             .build();
    }

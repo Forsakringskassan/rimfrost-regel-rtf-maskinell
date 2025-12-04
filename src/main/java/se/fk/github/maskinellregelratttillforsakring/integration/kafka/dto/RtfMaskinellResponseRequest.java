@@ -29,8 +29,6 @@ public interface RtfMaskinellResponseRequest
 
    String kogitoprocversion();
 
-   String kogitoprocrefid();
-
    RattTillForsakring rattTillForsakring();
 
 }
