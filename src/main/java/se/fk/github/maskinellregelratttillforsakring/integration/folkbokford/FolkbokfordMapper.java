@@ -16,7 +16,12 @@ public class FolkbokfordMapper
          return null;
       }
       return ImmutableFolkbokfordResponse.builder()
-            .folkbokford(true)
+              .id(apiResponse.getId())
+              .fornamn(apiResponse.getFornamn())
+              .efternamn(apiResponse.getEfternamn())
+              .utdelningsadress(apiResponse.getAdress().getUtdelningsadress())
+              .postnummer(apiResponse.getAdress().getPostnummer())
+              .postort(apiResponse.getAdress().getPostort())
             .build();
    }
 

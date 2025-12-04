@@ -6,6 +6,11 @@ import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.mo
 @Value.Immutable
 public interface FolkbokfordResponse
 {
-   boolean folkbokford();
+    String id();
+    String fornamn();
+    String efternamn();
+    String utdelningsadress();
+    String postnummer();
+    String postort();
 
 }
