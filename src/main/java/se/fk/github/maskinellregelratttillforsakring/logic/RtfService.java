@@ -44,7 +44,7 @@ public class RtfService
       var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer())
             .build();
       var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
-      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
+      RattTillForsakring rattTillForsakring = RattTillForsakring.UTREDNING;
 
       if (folkbokfordResponse == null)
       {
