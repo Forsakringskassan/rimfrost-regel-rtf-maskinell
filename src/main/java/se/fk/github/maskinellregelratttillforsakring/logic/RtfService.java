@@ -59,7 +59,8 @@ public class RtfService
          }
       }
       // Skicka resultat av regel
-      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
+      // TODO använd rattTillForsakring i svaret !!
+      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, RattTillForsakring.UTREDNING));
    }
 
    private boolean harAnstallning(ArbetsgivareResponse arbetsgivareResponse)
