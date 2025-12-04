@@ -1,17 +1,10 @@
 package se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.Valid;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableErsattning;
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableKundbehovsflodeResponse;
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.KundbehovsflodeResponse;
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.UpdateKundbehovsflodeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @ApplicationScoped
 public class KundbehovsflodeMapper

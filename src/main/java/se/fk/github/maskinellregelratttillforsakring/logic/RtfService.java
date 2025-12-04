@@ -64,7 +64,7 @@ public class RtfService
 
    private boolean harAnstallning(ArbetsgivareResponse arbetsgivareResponse)
    {
-      return !arbetsgivareResponse.organisationsNr().isEmpty();
+      return arbetsgivareResponse.organisationsNr() != null;
    }
 
 }

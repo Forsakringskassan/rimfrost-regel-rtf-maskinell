@@ -18,23 +18,18 @@ public class ArbetsgivareMapper
       if (apiResponse.getAnstallningar().isEmpty())
       {
          return ImmutableArbetsgivareResponse.builder()
-               .organisationsNr("")
-               .arbetstid(0)
-               .startdag("")
-               .slutdag("")
+               .organisationsNr(null)
+               .arbetstid(null)
+               .startdag(null)
+               .slutdag(null)
                .build();
       }
       Anstallning anstallning = apiResponse.getAnstallningar().getLast();
-      String slutdag = "";
-      if (anstallning.getSlutdag() != null)
-      {
-         slutdag = anstallning.getSlutdag();
-      }
       return ImmutableArbetsgivareResponse.builder()
             .organisationsNr(anstallning.getOrganisation().getNummer())
             .arbetstid(anstallning.getArbetstid())
-            .startdag(anstallning.getStartdag().toString())
-            .slutdag(slutdag)
+            .startdag(anstallning.getStartdag())
+            .slutdag(anstallning.getSlutdag())
             .build();
    }
 }
