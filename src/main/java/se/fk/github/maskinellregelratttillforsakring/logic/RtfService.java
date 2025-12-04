@@ -44,7 +44,7 @@ public class RtfService
       var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer())
             .build();
       var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
-      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
+/*      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
 
       if (folkbokfordResponse == null)
       {
@@ -57,7 +57,7 @@ public class RtfService
          {
             rattTillForsakring = RattTillForsakring.NEJ;
          }
-      }
+      }*/
       // Skicka resultat av regel
       // TODO använd rattTillForsakring i svaret !!
       kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, RattTillForsakring.UTREDNING));
