@@ -2,6 +2,23 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.2.1 (2025-12-04)
+
+### Bug Fixes
+
+-  tillfällig fix att alltid returnera utredning ([99bf3](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/99bf3fe7798ae39) Ulf Slunga)  
+-  tillfällig fix att alltid returnera utredning ([1cc7f](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1cc7fda55b44c1e) Ulf Slunga)  
+-  tillfällig fix att alltid returnera utredning ([98dd9](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/98dd92d92a3a4ef) Ulf Slunga)  
+-  tillfällig fix att alltid returnera utredning ([8cb55](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/8cb55859e0ddf52) Ulf Slunga)  
+
+### Other changes
+
+**remove kogitoprocrefid from request**
+
+
+[2d409](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2d409e503bc678f) Nils Elveros *2025-12-04 10:26:27*
+
+
 ## 0.2.0 (2025-12-04)
 
 ### Bug Fixes
