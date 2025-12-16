@@ -47,7 +47,7 @@ public class RtfService
       var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
       arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
       RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
-      
+
       if (folkbokfordResponse == null)
       {
          System.out.printf("folkbokfordResponse is null. harAnstallning: %s%n", harAnstallning(arbetsgivareResponse));
