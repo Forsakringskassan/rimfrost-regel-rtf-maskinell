@@ -269,10 +269,10 @@ public class RtfMaskinellContainerSmokeIT
    @ParameterizedTest
    @CsvSource(
    {
-         // "5367f6b8-cc4a-11f0-8de9-199901011234, 19990101-1234, Ja",
-         "5367f6b8-cc4a-11f0-8de9-199901013333, 19990101-3333, Utredning" //,
-   // "5367f6b8-cc4a-11f0-8de9-199901012222, 19990101-2222, Ja",
-   // "5367f6b8-cc4a-11f0-8de9-199901014444, 19990101-4444, Nej"
+         "5367f6b8-cc4a-11f0-8de9-199901011234, 19990101-1234, Ja",
+         "5367f6b8-cc4a-11f0-8de9-199901013333, 19990101-3333, Utredning",
+         "5367f6b8-cc4a-11f0-8de9-199901012222, 19990101-2222, Ja",
+         "5367f6b8-cc4a-11f0-8de9-199901014444, 19990101-4444, Nej"
    })
    void TestRtfMaskinellSmoke(String kundbehovsflodeId,
          String persnr,
