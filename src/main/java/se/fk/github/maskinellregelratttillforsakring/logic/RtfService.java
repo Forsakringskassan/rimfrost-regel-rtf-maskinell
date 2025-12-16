@@ -40,13 +40,13 @@ public class RtfService
       var kundbehovflodesResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(kundbehovsflodeRequest);
       // Evaluera logik
       var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();
-      //var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+      var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
       folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
       var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer())
             .build();
-      // var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+      var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
       arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
-      /*      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
+      RattTillForsakring rattTillForsakring = RattTillForsakring.JA;
       
       if (folkbokfordResponse == null)
       {
@@ -59,10 +59,9 @@ public class RtfService
          {
             rattTillForsakring = RattTillForsakring.NEJ;
          }
-      }*/
+      }
       // Skicka resultat av regel
-      // TODO använd rattTillForsakring i svaret !!
-      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, RattTillForsakring.UTREDNING));
+      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
    }
 
    private boolean harAnstallning(ArbetsgivareResponse arbetsgivareResponse)
