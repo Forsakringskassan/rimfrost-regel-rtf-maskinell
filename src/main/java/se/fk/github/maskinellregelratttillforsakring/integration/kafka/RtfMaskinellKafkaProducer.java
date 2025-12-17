@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import se.fk.github.maskinellregelratttillforsakring.integration.kafka.dto.RtfMaskinellResponseRequest;
 import se.fk.rimfrost.regel.rtf.maskinell.RtfMaskinellResponseMessagePayload;
 
-import java.util.UUID;
-
 @ApplicationScoped
 public class RtfMaskinellKafkaProducer
 {

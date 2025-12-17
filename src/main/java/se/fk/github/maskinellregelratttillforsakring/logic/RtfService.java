@@ -1,5 +1,7 @@
 package se.fk.github.maskinellregelratttillforsakring.logic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.ArbetsgivareAdapter;
@@ -35,7 +37,7 @@ public class RtfService
    @Inject
    DmnService dmnService;
 
-   public void getData(GetRtfDataRequest request)
+   public void getData(GetRtfDataRequest request) throws JsonProcessingException
    {
       // Hämta kundbehovsflöde
       var kundbehovsflodeRequest=ImmutableKundbehovsflodeRequest.builder().kundbehovsflodeId(request.kundbehovsflodeId()).build();
@@ -87,6 +89,7 @@ public class RtfService
 
       };
 
-      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request,rattTillForsakring));
+      kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(), folkbokfordResponse, arbetsgivareResponse, rattTillForsakring));
+      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
    }
 }
