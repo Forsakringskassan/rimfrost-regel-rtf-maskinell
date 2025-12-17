@@ -3,13 +3,13 @@ package se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflod
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface UpdateKundbehovsflodeUnderlag {
- 
-    String typ();
+public interface UpdateKundbehovsflodeUnderlag
+{
 
-    String version();
+   String typ();
 
-    String data();
-    
+   String version();
+
+   String data();
+
 }
-

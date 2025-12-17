@@ -21,8 +21,8 @@ import se.fk.rimfrost.regel.rtf.maskinell.RattTillForsakring;
 public class RtfMapper
 {
 
-      @Inject
-      ObjectMapper mapper;
+   @Inject
+   ObjectMapper mapper;
 
    public RtfMaskinellResponseRequest toRtfResponseRequest(GetRtfDataRequest request, RattTillForsakring rattTillForsakring)
    {
@@ -42,9 +42,11 @@ public class RtfMapper
             .build();
    }
 
-   public UpdateKundbehovsflodeRequest toUpdateKundbehovsflodeRequest(UUID kundbehovsflodeId, FolkbokfordResponse folkbokfordResponse, ArbetsgivareResponse arbetsgivareResponse, RattTillForsakring rattTillForsakring) throws JsonProcessingException
+   public UpdateKundbehovsflodeRequest toUpdateKundbehovsflodeRequest(UUID kundbehovsflodeId,
+         FolkbokfordResponse folkbokfordResponse, ArbetsgivareResponse arbetsgivareResponse,
+         RattTillForsakring rattTillForsakring) throws JsonProcessingException
    {
-      
+
       var folkbokfordUnderlag = ImmutableUpdateKundbehovsflodeUnderlag.builder()
             .typ("FolkbokfördUnderlag")
             .version("1.0")
@@ -58,9 +60,9 @@ public class RtfMapper
             .build();
 
       return ImmutableUpdateKundbehovsflodeRequest.builder()
-      .kundbehovsflodeId(kundbehovsflodeId)
-      .rattTillForsakring(rattTillForsakring)
-      .addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag)
-      .build();
+            .kundbehovsflodeId(kundbehovsflodeId)
+            .rattTillForsakring(rattTillForsakring)
+            .addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag)
+            .build();
    }
 }

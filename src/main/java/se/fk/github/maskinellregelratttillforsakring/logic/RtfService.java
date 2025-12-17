@@ -88,8 +88,8 @@ public class RtfService
       default->RattTillForsakring.UTREDNING;
 
       };
-
-      kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(), folkbokfordResponse, arbetsgivareResponse, rattTillForsakring));
+      kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(),
+            folkbokfordResponse, arbetsgivareResponse, rattTillForsakring));
       kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
    }
 }

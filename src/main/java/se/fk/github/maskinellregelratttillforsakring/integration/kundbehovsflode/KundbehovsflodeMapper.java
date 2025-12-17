@@ -29,7 +29,7 @@ public class KundbehovsflodeMapper
    public PutKundbehovsflodeRequest toApiRequest(UpdateKundbehovsflodeRequest request, GetKundbehovsflodeResponse apiResponse)
    {
       var putRequest = new PutKundbehovsflodeRequest();
-      
+
       //Vart ska hämta denna uppgiftdata från?
       var uppgift = new Uppgift();
       uppgift.setFsSAinformation(FSSAinformation.HANDLAGGNING_PAGAR);
@@ -52,7 +52,7 @@ public class KundbehovsflodeMapper
       uppgiftspecifikation.setUppgiftsGui(""); //TODO denna bör vara nullable?
       uppgift.setUppgiftspecifikation(uppgiftspecifikation);
 
-       var kundbehovflode = apiResponse.getKundbehovsflode();
+      var kundbehovflode = apiResponse.getKundbehovsflode();
       var ersattningar = apiResponse.getKundbehovsflode().getKundbehov().getErsattning();
 
       for (var ersattning : ersattningar)
@@ -78,8 +78,10 @@ public class KundbehovsflodeMapper
       return putRequest;
    }
 
-   private BeslutsutfallEnum toBeslutsutfallEnum(RattTillForsakring rtf) {
-      switch (rtf) {
+   private BeslutsutfallEnum toBeslutsutfallEnum(RattTillForsakring rtf)
+   {
+      switch (rtf)
+      {
          case JA:
             return BeslutsutfallEnum.JA;
          case NEJ:
@@ -89,5 +91,5 @@ public class KundbehovsflodeMapper
          default:
             throw new InternalServerErrorException("Could not map RattTillForsakring: " + rtf);
       }
-   } 
+   }
 }
