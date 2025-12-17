@@ -41,10 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -295,11 +292,20 @@ public class RtfMaskinellContainerSmokeIT
       assertEquals(arbetsgivareEndpoint + persnr, arbetsgivareRequests.getFirst().getUrl());
       // Log sent requests
       List<LoggedRequest> requests = wiremockClient.findAll(WireMock.getRequestedFor(WireMock.urlMatching(".*")));
+      System.out.printf("Wiremock received requests:%n");
       for (LoggedRequest req : requests)
       {
          System.out.println("Request URL: " + req.getUrl());
          System.out.println("Body: " + req.getBodyAsString());
+
       }
+      System.out.printf("Wiremock generated responses:%n");
+      wiremockClient.getServeEvents()
+            .forEach(e -> {
+               System.out.printf("URL: %s%n", e.getRequest().getUrl());
+               System.out.printf("STATUS: %s%n", e.getResponse().getStatus());
+               System.out.printf("BODY: %s%n", e.getResponse().getBodyAsString());
+            });
 
       String rtfMaskinellResponseJson = readKafkaMessage(rtfMaskinellResponsesConsumer);
       var rtfMaskinellResponse = mapper.readValue(rtfMaskinellResponseJson, RtfMaskinellResponseMessagePayload.class);
