@@ -2,14 +2,14 @@ package se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflod
 
 import org.immutables.value.Value;
 
-import java.util.UUID;
-
 @Value.Immutable
-public interface KundbehovsflodeResponse
+public interface UpdateKundbehovsflodeUnderlag
 {
 
-   UUID kundbehovsflodeId();
+   String typ();
 
-   String personnummer();
+   String version();
+
+   String data();
 
 }

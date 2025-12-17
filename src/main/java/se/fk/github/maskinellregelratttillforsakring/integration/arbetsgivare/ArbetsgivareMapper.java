@@ -6,8 +6,6 @@ import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.dt
 import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.model.Anstallning;
 import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.model.GetArbetsgivare200Response;
 
-import java.time.LocalDate;
-
 @ApplicationScoped
 public class ArbetsgivareMapper
 {
