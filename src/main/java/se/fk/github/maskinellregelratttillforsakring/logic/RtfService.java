@@ -14,62 +14,49 @@ import se.fk.github.maskinellregelratttillforsakring.logic.dto.GetRtfDataRequest
 import se.fk.rimfrost.regel.rtf.maskinell.RattTillForsakring;
 
 @ApplicationScoped
-public class RtfService {
+public class RtfService
+{
 
-    @Inject
-    RtfMaskinellKafkaProducer kafkaProducer;
+   @Inject
+   RtfMaskinellKafkaProducer kafkaProducer;
 
-    @Inject
-    RtfMapper mapper;
+   @Inject
+   RtfMapper mapper;
 
-    @Inject
-    FolkbokfordAdapter folkbokfordAdapter;
+   @Inject
+   FolkbokfordAdapter folkbokfordAdapter;
 
-    @Inject
-    ArbetsgivareAdapter arbetsgivareAdapter;
+   @Inject
+   ArbetsgivareAdapter arbetsgivareAdapter;
 
-    @Inject
-    KundbehovsflodeAdapter kundbehovsflodeAdapter;
+   @Inject
+   KundbehovsflodeAdapter kundbehovsflodeAdapter;
 
-    @Inject
-    DmnService dmnService;
+   @Inject
+   DmnService dmnService;
 
-    public void getData(GetRtfDataRequest request) {
-        // Hämta kundbehovsflöde
-        var kundbehovsflodeRequest = ImmutableKundbehovsflodeRequest.builder().kundbehovsflodeId(request.kundbehovsflodeId()).build();
-        var kundbehovflodesResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(kundbehovsflodeRequest);
+   public void getData(GetRtfDataRequest request)
+   {
+      // Hämta kundbehovsflöde
+      var kundbehovsflodeRequest=ImmutableKundbehovsflodeRequest.builder().kundbehovsflodeId(request.kundbehovsflodeId()).build();var kundbehovflodesResponse=kundbehovsflodeAdapter.getKundbehovsflodeInfo(kundbehovsflodeRequest);
 
-        // Evaluera logik
-        var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();
-        var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+      // Evaluera logik
+      var folkbokfordRequest=ImmutableFolkbokfordRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();var folkbokfordResponse=folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
 
-        var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();
-        var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+      var arbetsgivareRequest=ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();var arbetsgivareResponse=arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
 
-        boolean folkbokfordFinns = folkbokfordResponse != null;
-        boolean harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsNr() != null;
+      boolean folkbokfordFinns=folkbokfordResponse!=null;boolean harAnstallning=arbetsgivareResponse!=null&&arbetsgivareResponse.organisationsNr()!=null;
 
-        String namespace = "https://se.fk/github/maskinellregelratttillforsakring";
-        String modelName = "RtfDecisionModel";
+      String namespace="https://se.fk/github/maskinellregelratttillforsakring";String modelName="RtfDecisionModel";
 
-        var dmnRuntime = dmnService.getRuntime();
-        var model = dmnRuntime.getModel(namespace, modelName);
+      var dmnRuntime=dmnService.getRuntime();var model=dmnRuntime.getModel(namespace,modelName);
 
-        var ctx = dmnRuntime.newContext();
-        ctx.set("folkbokford", folkbokfordFinns);
-        ctx.set("harAnstallning", harAnstallning);
+      var ctx=dmnRuntime.newContext();ctx.set("folkbokford",folkbokfordFinns);ctx.set("harAnstallning",harAnstallning);
 
-        var result = dmnRuntime.evaluateAll(model, ctx);
-        var raw = result.getDecisionResultByName("rattTillForsakring").getResult();
-        String dmnValue = raw != null ? raw.toString() : "UTREDNING";
+      var result=dmnRuntime.evaluateAll(model,ctx);var raw=result.getDecisionResultByName("rattTillForsakring").getResult();String dmnValue=raw!=null?raw.toString():"UTREDNING";
 
-        RattTillForsakring rattTillForsakring = switch (dmnValue) {
-            case "NEJ" -> RattTillForsakring.NEJ;
-            case "UTREDNING" -> RattTillForsakring.UTREDNING;
-            case "JA" -> RattTillForsakring.JA;
-            default -> RattTillForsakring.UTREDNING;
-        };
+      RattTillForsakring rattTillForsakring=switch(dmnValue){case"NEJ"->RattTillForsakring.NEJ;case"UTREDNING"->RattTillForsakring.UTREDNING;case"JA"->RattTillForsakring.JA;default->RattTillForsakring.UTREDNING;};
 
-        kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
-    }
+      kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request,rattTillForsakring));
+   }
 }

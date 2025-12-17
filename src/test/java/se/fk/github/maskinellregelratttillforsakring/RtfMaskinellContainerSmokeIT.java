@@ -299,8 +299,8 @@ public class RtfMaskinellContainerSmokeIT
          System.out.println("Body: " + req.getBodyAsString());
 
       }
-       System.out.printf("Wiremock generated responses:%n");
-       wiremockClient.getServeEvents()
+      System.out.printf("Wiremock generated responses:%n");
+      wiremockClient.getServeEvents()
             .forEach(e -> {
                System.out.printf("URL: %s%n", e.getRequest().getUrl());
                System.out.printf("STATUS: %s%n", e.getResponse().getStatus());
