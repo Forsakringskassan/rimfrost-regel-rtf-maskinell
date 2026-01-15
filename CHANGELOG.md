@@ -2,6 +2,26 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.3.0 (2026-01-15)
+
+### Features
+
+-  add healthcheck (#49) ([fee65](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/fee65c765891173) NilsElveros)  
+-  update the PUT to kundbehovsservice with underlag (#47) ([99137](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/99137a5bf3ba512) NilsElveros)  
+
+### Bug Fixes
+
+-  tar bort ej fungerande unit-tester ([ace1e](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/ace1ef7dd903f91) Ulf Slunga)  
+-  blankrader för att inte spotless ska joina rader ! ([38c03](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/38c030acb139cea) Ulf Slunga)  
+-  spotless apply ([cf4ed](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/cf4edb215be535c) Ulf Slunga)  
+-  spotless apply ([c73e8](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/c73e82aa2fcb33a) Ulf Slunga)  
+-  evaluera rätt till försäkring ist för hårdkodat utredning ([2d958](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2d958dfed5b3d34) Ulf Slunga)  
+
+### Dependency updates
+
+- update testcontainers-java monorepo to v1.21.4 ([8dbe9](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/8dbe96a0c3beb16) renovate[bot])  
+- update testcontainers-java monorepo to v1.21.3 ([485e1](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/485e1c7cb934b06) renovate[bot])  
+- update dependency org.wiremock:wiremock to v3.13.2 ([43e79](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/43e7966cd9fba3c) renovate[bot])  
 ## 0.2.1 (2025-12-04)
 
 ### Bug Fixes
