@@ -2,7 +2,6 @@ package se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflod
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.InternalServerErrorException;
@@ -28,52 +27,67 @@ public class KundbehovsflodeMapper
 
    public PutKundbehovsflodeRequest toApiRequest(UpdateKundbehovsflodeRequest request, GetKundbehovsflodeResponse apiResponse)
    {
-      var putRequest = new PutKundbehovsflodeRequest();
+      var lagrum = new Lagrum();
+      lagrum.setId(request.uppgift().specifikation().regel().lagrum().id());
+      lagrum.setVersion(request.uppgift().specifikation().regel().lagrum().version());
+      lagrum.setForfattning(request.uppgift().specifikation().regel().lagrum().forfattning());
+      lagrum.setGiltigFrom(request.uppgift().specifikation().regel().lagrum().giltigFrom());
+      lagrum.setGiltigTom(request.uppgift().specifikation().regel().lagrum().giltigTom());
+      lagrum.setKapitel(request.uppgift().specifikation().regel().lagrum().kapitel());
+      lagrum.setParagraf(request.uppgift().specifikation().regel().lagrum().paragraf());
+      lagrum.setPunkt(request.uppgift().specifikation().regel().lagrum().punkt());
+      lagrum.setStycke(request.uppgift().specifikation().regel().lagrum().stycke());
 
-      //Vart ska hämta denna uppgiftdata från?
-      var uppgift = new Uppgift();
-      uppgift.setFsSAinformation(FSSAinformation.HANDLAGGNING_PAGAR);
-      uppgift.setSkapadTs(OffsetDateTime.now());
-      uppgift.setUtfordTs(OffsetDateTime.now());
-      uppgift.setUppgiftStatus(UppgiftStatus.AVSLUTAD);
-      uppgift.setVersion("1.0");
-      uppgift.setId(UUID.randomUUID()); //Ska vi dnena vara nullable kanske?
+      var regel = new Regel();
+      regel.setId(request.uppgift().specifikation().regel().id());
+      regel.setVersion(request.uppgift().specifikation().regel().version());
+      regel.setLagrum(lagrum);
 
       var uppgiftspecifikation = new Uppgiftspecifikation();
-      uppgiftspecifikation.setId(UUID.randomUUID());
-      uppgiftspecifikation.setApplikationsId("rtf-maskinell");
-      uppgiftspecifikation.setApplikationsVersion("1.0");
-      uppgiftspecifikation.setNamn("Rätt till försäkring - maskinell kontroll");
-      uppgiftspecifikation.setRoll(Roll.AGARE);
-      uppgiftspecifikation.setUppgiftbeskrivning("Kontrollera om personen är folkbokförd");
-      uppgiftspecifikation.setVerksamhetslogik(Verksamhetslogik.A);
-      uppgiftspecifikation.setVersion("1.0");
-      uppgiftspecifikation.setRegel(new ArrayList<Regel>());
-      uppgiftspecifikation.setUppgiftsGui(""); //TODO denna bör vara nullable?
-      uppgift.setUppgiftspecifikation(uppgiftspecifikation);
+      uppgiftspecifikation.setId(request.uppgift().specifikation().id());
+      uppgiftspecifikation.setApplikationsId(request.uppgift().specifikation().applikationsId());
+      uppgiftspecifikation.setApplikationsVersion(request.uppgift().specifikation().applikationsversion());
+      uppgiftspecifikation.setNamn(request.uppgift().specifikation().namn());
+      uppgiftspecifikation.setRoll(request.uppgift().specifikation().roll());
+      uppgiftspecifikation.setUppgiftbeskrivning(request.uppgift().specifikation().uppgiftsbeskrivning());
+      uppgiftspecifikation.setUppgiftsGui(request.uppgift().specifikation().url());
+      uppgiftspecifikation.setVerksamhetslogik(request.uppgift().specifikation().verksamhetslogik());
+      uppgiftspecifikation.setVersion(request.uppgift().specifikation().version());
+      uppgiftspecifikation.setRegel(regel);
 
-      var kundbehovflode = apiResponse.getKundbehovsflode();
-      var ersattningar = apiResponse.getKundbehovsflode().getKundbehov().getErsattning();
-
-      for (var ersattning : ersattningar)
-      {
-         ersattning.setBeslutsutfall(toBeslutsutfallEnum(request.rattTillForsakring()));
-      }
-
+      var underlagList = new ArrayList<Underlag>();
       for (var underlag : request.underlag())
       {
          var underlagitem = new Underlag();
          underlagitem.typ(underlag.typ());
          underlagitem.version(underlag.version());
          underlagitem.data(underlag.data());
-
-         uppgift.addUnderlagItem(underlagitem);
+         underlagList.add(underlagitem);
       }
 
+      var uppgift = new Uppgift();
+      uppgift.setId(request.uppgift().id());
+      uppgift.setFsSAinformation(request.uppgift().fsSAinformation());
+      uppgift.setSkapadTs(request.uppgift().skapadTs());
+      uppgift.setUtfordTs(request.uppgift().utfordTs());
+      uppgift.setUppgiftStatus(request.uppgift().uppgiftStatus());
+      uppgift.setVersion(request.uppgift().version());
+      uppgift.setUppgiftspecifikation(uppgiftspecifikation);
+      uppgift.setUnderlag(underlagList);
+
+      var ersattningar = apiResponse.getKundbehovsflode().getKundbehov().getErsattning();
+      for (var ersattning : ersattningar)
+      {
+         ersattning.setBeslutsutfall(toBeslutsutfallEnum(request.rattTillForsakring()));
+      }
+
+      var kundbehovflode = apiResponse.getKundbehovsflode();
       var kundbehov = kundbehovflode.getKundbehov();
       kundbehov.setErsattning(ersattningar);
       kundbehovflode.setKundbehov(kundbehov);
       uppgift.setKundbehovsflode(kundbehovflode);
+
+      var putRequest = new PutKundbehovsflodeRequest();
       putRequest.setUppgift(uppgift);
       return putRequest;
    }

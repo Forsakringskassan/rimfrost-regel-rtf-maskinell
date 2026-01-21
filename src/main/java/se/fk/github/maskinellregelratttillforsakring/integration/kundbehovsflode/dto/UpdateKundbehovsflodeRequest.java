@@ -12,6 +12,8 @@ public interface UpdateKundbehovsflodeRequest
 {
    UUID kundbehovsflodeId();
 
+   UpdateKundbehovsflodeUppgift uppgift();
+
    RattTillForsakring rattTillForsakring();
 
    List<UpdateKundbehovsflodeUnderlag> underlag();
