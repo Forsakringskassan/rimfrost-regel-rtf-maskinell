@@ -3,6 +3,8 @@ package se.fk.github.maskinellregelratttillforsakring.logic.config;
 import java.util.Date;
 import java.util.UUID;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class Lagrum
 {
 
@@ -40,11 +42,13 @@ public class Lagrum
       this.version = version;
    }
 
+   @SuppressFBWarnings("EI_EXPOSE_REP")
    public Date getGiltigFom()
    {
       return giltigFom;
    }
 
+   @SuppressFBWarnings("EI_EXPOSE_REP")
    public void setGiltigFom(Date giltigFom)
    {
       this.giltigFom = giltigFom;
