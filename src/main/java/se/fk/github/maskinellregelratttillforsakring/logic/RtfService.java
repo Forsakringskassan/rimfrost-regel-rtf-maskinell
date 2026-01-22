@@ -2,15 +2,18 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.ArbetsgivareAdapter;
 import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.dto.ImmutableArbetsgivareRequest;
+import se.fk.github.maskinellregelratttillforsakring.integration.config.RegelConfigProvider;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.FolkbokfordAdapter;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto.ImmutableFolkbokfordRequest;
 import se.fk.github.maskinellregelratttillforsakring.integration.kafka.RtfMaskinellKafkaProducer;
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.KundbehovsflodeAdapter;
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableKundbehovsflodeRequest;
+import se.fk.github.maskinellregelratttillforsakring.logic.config.RegelConfig;
 import se.fk.github.maskinellregelratttillforsakring.logic.dto.GetRtfDataRequest;
 import se.fk.rimfrost.regel.rtf.maskinell.RattTillForsakring;
 
@@ -35,6 +38,17 @@ public class RtfService
 
    @Inject
    DmnService dmnService;
+
+   @Inject
+   RegelConfigProvider regelConfigProvider;
+
+   private RegelConfig regelConfig;
+
+   @PostConstruct
+   void init()
+   {
+      this.regelConfig = regelConfigProvider.getConfig();
+   }
 
    public void getData(GetRtfDataRequest request) throws JsonProcessingException
    {
@@ -81,7 +95,7 @@ public class RtfService
       RattTillForsakring rattTillForsakring = mapRtf(dmnValue);
 
       kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(),
-            folkbokfordResponse, arbetsgivareResponse, rattTillForsakring));
+            folkbokfordResponse, arbetsgivareResponse, rattTillForsakring, regelConfig));
       kafkaProducer.sendRtfMaskinellResponse(mapper.toRtfResponseRequest(request, rattTillForsakring));
    }
 
