@@ -14,6 +14,7 @@ public class RegelConfig
    {
    }
 
+   @SuppressFBWarnings("EI_EXPOSE_REP2")
    public RegelConfig(Uppgift uppgift, Specifikation specifikation, Regel regel, Lagrum lagrum)
    {
       this.uppgift = uppgift;
