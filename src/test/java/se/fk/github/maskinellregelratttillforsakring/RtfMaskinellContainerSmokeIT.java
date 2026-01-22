@@ -28,19 +28,11 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
-import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.model.Anstallning;
-import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.model.GetArbetsgivare200Response;
-import se.fk.rimfrost.api.arbetsgivare.jaxrsspec.controllers.generatedsource.model.Organisation;
-import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.Adress;
-import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.FolkbokforingPersnrGet200Response;
-import se.fk.rimfrost.api.folkbokforing.jaxrsspec.controllers.generatedsource.model.Kon;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetKundbehovsflodeResponse;
-import se.fk.rimfrost.regel.rtf.maskinell.*;
+import se.fk.rimfrost.regel.common.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -197,8 +189,8 @@ public class RtfMaskinellContainerSmokeIT
 
    private void sendRtfMaskinellRequest(String kundbehovsflodeId) throws Exception
    {
-      RtfMaskinellRequestMessagePayload payload = new RtfMaskinellRequestMessagePayload();
-      RtfMaskinellRequestMessageData data = new RtfMaskinellRequestMessageData();
+      RegelRequestMessagePayload payload = new RegelRequestMessagePayload();
+      RegelRequestMessagePayloadData data = new RegelRequestMessagePayloadData();
       data.setKundbehovsflodeId(kundbehovsflodeId);
       payload.setSpecversion(SpecVersion.NUMBER_1_DOT_0);
       payload.setId("99994567-89ab-4cde-9012-3456789abcde");
@@ -273,7 +265,7 @@ public class RtfMaskinellContainerSmokeIT
    })
    void TestRtfMaskinellSmoke(String kundbehovsflodeId,
          String persnr,
-         String expectedRattTillForsakring) throws Exception
+         String expectedUtfall) throws Exception
    {
 
       System.out.printf("Starting TestRtfMaskinellSmoke. %S%n", kundbehovsflodeId);
@@ -308,9 +300,9 @@ public class RtfMaskinellContainerSmokeIT
             });
 
       String rtfMaskinellResponseJson = readKafkaMessage(rtfMaskinellResponsesConsumer);
-      var rtfMaskinellResponse = mapper.readValue(rtfMaskinellResponseJson, RtfMaskinellResponseMessagePayload.class);
+      var rtfMaskinellResponse = mapper.readValue(rtfMaskinellResponseJson, RegelResponseMessagePayload.class);
       assertEquals(kundbehovsflodeId, rtfMaskinellResponse.getData().getKundbehovsflodeId());
-      assertEquals(expectedRattTillForsakring, rtfMaskinellResponse.getData().getRattTillForsakring().getValue());
+      assertEquals(expectedUtfall, rtfMaskinellResponse.getData().getUtfall().getValue());
 
    }
 }

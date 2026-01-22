@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20230324/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="https://kie.org/dmn/extensions/1.0" expressionLanguage="https://www.omg.org/spec/DMN/20230324/FEEL/" namespace="https://se.fk/github/maskinellregelratttillforsakring" id="_32B63752-A3D2-4905-9BE1-B117FB2FB6A9" name="RtfDecisionModel">
-  <decision name="rattTillForsakring" id="_A1806D3F-AA7C-45C2-8D3A-F55634EF3A3D">
-    <variable name="rattTillForsakring" id="_2ABEE96F-8D44-4812-8F9D-7789A435CA55" typeRef="string" />
+  <decision name="utfall" id="_A1806D3F-AA7C-45C2-8D3A-F55634EF3A3D">
+    <variable name="utfall" id="_2ABEE96F-8D44-4812-8F9D-7789A435CA55" typeRef="string" />
     <informationRequirement id="_B12461EC-0592-46F5-9836-BCFE3B326978">
       <requiredInput href="#_678CCBDB-5D66-49F9-B6D1-4955EBDE5A0B" />
     </informationRequirement>
     <informationRequirement id="_360C14CA-3484-416F-A1EE-55D089D0400D">
       <requiredInput href="#_12D10B75-1FEE-41C6-AA21-4C8DD1F3FB15" />
     </informationRequirement>
-    <decisionTable id="_CA09F883-3966-417F-BE5F-625C9259ADA5" typeRef="string" hitPolicy="UNIQUE" label="rattTillForsakring">
+    <decisionTable id="_CA09F883-3966-417F-BE5F-625C9259ADA5" typeRef="string" hitPolicy="UNIQUE" label="utfall">
       <input id="_551B2CCD-BC9F-4610-81F0-EB0E4FC16049">
         <inputExpression id="_A29C2ACB-90E5-44D5-B7B2-82320E4C4F96" typeRef="boolean">
           <text>folkbokford</text>

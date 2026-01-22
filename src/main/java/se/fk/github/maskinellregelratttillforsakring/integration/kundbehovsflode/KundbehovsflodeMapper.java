@@ -10,7 +10,7 @@ import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode
 import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.UpdateKundbehovsflodeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.*;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning.BeslutsutfallEnum;
-import se.fk.rimfrost.regel.rtf.maskinell.RattTillForsakring;
+import se.fk.rimfrost.regel.common.Utfall;
 
 @ApplicationScoped
 public class KundbehovsflodeMapper
@@ -78,7 +78,7 @@ public class KundbehovsflodeMapper
       var ersattningar = apiResponse.getKundbehovsflode().getKundbehov().getErsattning();
       for (var ersattning : ersattningar)
       {
-         ersattning.setBeslutsutfall(toBeslutsutfallEnum(request.rattTillForsakring()));
+         ersattning.setBeslutsutfall(toBeslutsutfallEnum(request.utfall()));
       }
 
       var kundbehovflode = apiResponse.getKundbehovsflode();
@@ -92,7 +92,7 @@ public class KundbehovsflodeMapper
       return putRequest;
    }
 
-   private BeslutsutfallEnum toBeslutsutfallEnum(RattTillForsakring rtf)
+   private BeslutsutfallEnum toBeslutsutfallEnum(Utfall rtf)
    {
       switch (rtf)
       {
@@ -103,7 +103,7 @@ public class KundbehovsflodeMapper
          case UTREDNING:
             return BeslutsutfallEnum.FU;
          default:
-            throw new InternalServerErrorException("Could not map RattTillForsakring: " + rtf);
+            throw new InternalServerErrorException("Could not map Utfall: " + rtf);
       }
    }
 }

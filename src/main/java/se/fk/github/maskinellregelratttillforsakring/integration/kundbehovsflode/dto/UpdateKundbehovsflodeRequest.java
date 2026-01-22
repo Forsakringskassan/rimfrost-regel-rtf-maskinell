@@ -2,7 +2,7 @@ package se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflod
 
 import org.immutables.value.Value;
 
-import se.fk.rimfrost.regel.rtf.maskinell.RattTillForsakring;
+import se.fk.rimfrost.regel.common.Utfall;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +14,7 @@ public interface UpdateKundbehovsflodeRequest
 
    UpdateKundbehovsflodeUppgift uppgift();
 
-   RattTillForsakring rattTillForsakring();
+   Utfall utfall();
 
    List<UpdateKundbehovsflodeUnderlag> underlag();
 }
