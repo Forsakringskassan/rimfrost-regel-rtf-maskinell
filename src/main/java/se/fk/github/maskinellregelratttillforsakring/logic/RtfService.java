@@ -109,6 +109,7 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
             .kogitoprocversion(request.kogitoprocversion())
             .kogitorootprocid(request.kogitorootprocid())
             .kogitorootprociid(request.kogitorootprociid())
+            .type(request.type())
             .build();
 
       // Evaluera logik
