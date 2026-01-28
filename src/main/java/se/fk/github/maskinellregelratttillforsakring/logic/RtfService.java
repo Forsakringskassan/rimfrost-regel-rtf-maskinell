@@ -67,6 +67,9 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
    @ConfigProperty(name = "kafka.source")
    String kafkaSource;
 
+   @ConfigProperty(name = "mp.messaging.outgoing.regel-responses.topic")
+   String responseTopic;
+
    @Override
    public void handleRegelRequest(RegelDataRequest request)
    {
@@ -109,7 +112,8 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
             .kogitoprocversion(request.kogitoprocversion())
             .kogitorootprocid(request.kogitorootprocid())
             .kogitorootprociid(request.kogitorootprociid())
-            .type(request.type())
+            .source(kafkaSource)
+            .type(responseTopic)
             .build();
 
       // Evaluera logik
@@ -150,8 +154,9 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
 
       kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(),
             folkbokfordResponse, arbetsgivareResponse, utfall, regelConfig));
+
       var rtfResponse = regelMapper.toRegelResponse(request.kundbehovsflodeId(), cloudevent, utfall);
-      regelKafkaProducer.sendRegelResponse(rtfResponse, kafkaSource);
+      regelKafkaProducer.sendRegelResponse(rtfResponse);
    }
 
    private Utfall mapRtf(String dmnValue)
