@@ -28,7 +28,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
-import se.fk.rimfrost.regel.common.*;
+import se.fk.rimfrost.framework.regel.*;
 
 import java.io.IOException;
 import java.io.InputStream;

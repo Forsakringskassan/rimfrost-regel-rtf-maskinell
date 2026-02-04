@@ -10,24 +10,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.ArbetsgivareAdapter;
 import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.dto.ImmutableArbetsgivareRequest;
-import se.fk.github.maskinellregelratttillforsakring.integration.config.RegelConfigProvider;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.FolkbokfordAdapter;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto.ImmutableFolkbokfordRequest;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.KundbehovsflodeAdapter;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableKundbehovsflodeRequest;
-import se.fk.github.maskinellregelratttillforsakring.logic.config.RegelConfig;
-import se.fk.rimfrost.regel.common.Utfall;
-import se.fk.rimfrost.regel.common.integration.kafka.RegelKafkaProducer;
-import se.fk.rimfrost.regel.common.logic.RegelMapper;
-import se.fk.rimfrost.regel.common.logic.dto.OulResponse;
-import se.fk.rimfrost.regel.common.logic.dto.OulStatus;
-import se.fk.rimfrost.regel.common.logic.dto.RegelDataRequest;
-import se.fk.rimfrost.regel.common.logic.entity.ImmutableCloudEventData;
-import se.fk.rimfrost.regel.common.presentation.kafka.OulHandlerInterface;
-import se.fk.rimfrost.regel.common.presentation.kafka.RegelRequestHandlerInterface;
+import se.fk.rimfrost.framework.regel.Utfall;
+import se.fk.rimfrost.framework.regel.integration.config.RegelConfigProvider;
+import se.fk.rimfrost.framework.regel.integration.kafka.RegelKafkaProducer;
+import se.fk.rimfrost.framework.regel.integration.kundbehovsflode.KundbehovsflodeAdapter;
+import se.fk.rimfrost.framework.regel.integration.kundbehovsflode.dto.ImmutableKundbehovsflodeRequest;
+import se.fk.rimfrost.framework.regel.logic.RegelMapper;
+import se.fk.rimfrost.framework.regel.logic.config.RegelConfig;
+import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
+import se.fk.rimfrost.framework.regel.logic.entity.ImmutableCloudEventData;
+import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
 
 @ApplicationScoped
-public class RtfService implements RegelRequestHandlerInterface, OulHandlerInterface
+public class RtfService implements RegelRequestHandlerInterface
 {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(RtfService.class);
@@ -81,18 +78,6 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
       {
          LOGGER.error("Failed to process request with ID: " + request.kundbehovsflodeId());
       }
-   }
-
-   @Override
-   public void handleOulResponse(OulResponse oulResponse)
-   {
-      // Not used by Maskinell rule
-   }
-
-   @Override
-   public void handleOulStatus(OulStatus oulStatus)
-   {
-      // Not used by Maskinell rule
    }
 
    private void processRegelRequest(RegelDataRequest request) throws JsonProcessingException
@@ -153,7 +138,7 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
       Utfall utfall = mapRtf(dmnValue);
 
       kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(),
-            folkbokfordResponse, arbetsgivareResponse, utfall, regelConfig));
+            folkbokfordResponse, arbetsgivareResponse, utfall, regelConfig, kundbehovflodesResponse));
 
       var rtfResponse = regelMapper.toRegelResponse(request.kundbehovsflodeId(), cloudevent, utfall);
       regelKafkaProducer.sendRegelResponse(rtfResponse);
@@ -161,19 +146,6 @@ public class RtfService implements RegelRequestHandlerInterface, OulHandlerInter
 
    private Utfall mapRtf(String dmnValue)
    {
-      switch (dmnValue)
-      {
-         case "NEJ":
-            return Utfall.NEJ;
-
-         case "UTREDNING":
-            return Utfall.UTREDNING;
-
-         case "JA":
-            return Utfall.JA;
-
-         default:
-            return Utfall.UTREDNING;
-      }
+      return switch(dmnValue){case"NEJ"->Utfall.NEJ;case"JA"->Utfall.JA;default->Utfall.UTREDNING;};
    }
 }

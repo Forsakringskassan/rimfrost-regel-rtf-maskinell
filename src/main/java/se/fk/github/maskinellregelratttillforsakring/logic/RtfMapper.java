@@ -2,6 +2,7 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,21 +10,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.maskinellregelratttillforsakring.integration.arbetsgivare.dto.ArbetsgivareResponse;
 import se.fk.github.maskinellregelratttillforsakring.integration.folkbokford.dto.FolkbokfordResponse;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableUpdateKundbehovsflodeLagrum;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableUpdateKundbehovsflodeRegel;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableUpdateKundbehovsflodeRequest;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableUpdateKundbehovsflodeSpecifikation;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableUpdateKundbehovsflodeUnderlag;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.ImmutableUpdateKundbehovsflodeUppgift;
-import se.fk.github.maskinellregelratttillforsakring.integration.kundbehovsflode.dto.UpdateKundbehovsflodeRequest;
-import se.fk.github.maskinellregelratttillforsakring.logic.config.RegelConfig;
+import se.fk.rimfrost.framework.regel.integration.kundbehovsflode.dto.*;
+import se.fk.rimfrost.framework.regel.logic.config.RegelConfig;
+import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Roll;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Verksamhetslogik;
-import se.fk.rimfrost.regel.common.Utfall;
+import se.fk.rimfrost.framework.regel.Utfall;
 
 @ApplicationScoped
 public class RtfMapper
@@ -34,7 +31,7 @@ public class RtfMapper
 
    public UpdateKundbehovsflodeRequest toUpdateKundbehovsflodeRequest(UUID kundbehovsflodeId,
          FolkbokfordResponse folkbokfordResponse, ArbetsgivareResponse arbetsgivareResponse,
-         Utfall utfall, RegelConfig regelConfig) throws JsonProcessingException
+         Utfall utfall, RegelConfig regelConfig, KundbehovsflodeResponse kundbehovsflodeResponse) throws JsonProcessingException
    {
       var lagrum = ImmutableUpdateKundbehovsflodeLagrum.builder()
             .id(regelConfig.getLagrum().getId())
@@ -92,11 +89,32 @@ public class RtfMapper
             .data(mapper.writeValueAsString(arbetsgivareResponse))
             .build();
 
+      var ersattningar = new ArrayList<UpdateKundbehovsflodeErsattning>();
+      for (KundbehovsflodeResponse.Ersattning responseErsattning : kundbehovsflodeResponse.ersattning())
+      {
+         var ersattning = ImmutableUpdateKundbehovsflodeErsattning.builder()
+               .beslutsutfall(toBeslutsutfallEnum(utfall))
+               .id(responseErsattning.ersattningsId())
+               .build();
+         ersattningar.add(ersattning);
+      }
+
       return ImmutableUpdateKundbehovsflodeRequest.builder()
             .kundbehovsflodeId(kundbehovsflodeId)
-            .utfall(utfall)
             .uppgift(uppgift)
             .addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag)
+            .addAllErsattningar(ersattningar)
             .build();
+   }
+
+   private Ersattning.BeslutsutfallEnum toBeslutsutfallEnum(Utfall utfall)
+   {
+      return switch (utfall)
+      {
+         case JA -> Ersattning.BeslutsutfallEnum.JA;
+         case NEJ -> Ersattning.BeslutsutfallEnum.NEJ;
+         case UTREDNING -> Ersattning.BeslutsutfallEnum.FU;
+         default -> throw new InternalServerErrorException("Could not map Utfall: " + utfall);
+      };
    }
 }
