@@ -201,6 +201,14 @@ public class RtfMaskinellTest
             .orElseThrow();
       var sentPutKundbehovsflodeRequest = mapper.readValue(putRequest.getBodyAsString(), PutKundbehovsflodeRequest.class);
       assertEquals(UppgiftStatus.AVSLUTAD, sentPutKundbehovsflodeRequest.getUppgift().getUppgiftStatus());
+      assertEquals("TestUppgiftNamn", sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getNamn());
+      assertEquals("TestUppgiftBeskrivning",
+            sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getUppgiftbeskrivning());
+
+      var sentUnderlag = sentPutKundbehovsflodeRequest.getUppgift().getUnderlag();
+      assertEquals(2, sentUnderlag.size());
+      assertEquals("FolkbokfördUnderlag", sentUnderlag.getFirst().getTyp());
+      assertEquals("ArbetsgivareUnderlag", sentUnderlag.getLast().getTyp());
 
       var sentKundBehov = sentPutKundbehovsflodeRequest.getUppgift().getKundbehovsflode().getKundbehov();
       for (var ersattning : sentKundBehov.getErsattning())
