@@ -113,7 +113,7 @@ public class RtfService implements RegelRequestHandlerInterface
 
       boolean folkbokfordFinns = folkbokfordResponse != null;
 
-      boolean harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsNr() != null;
+      boolean harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsnummer() != null;
 
       String namespace = "https://se.fk/github/maskinellregelratttillforsakring";
 
