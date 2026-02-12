@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.rimfrost.framework.arbetsgivare.adapter.dto.ArbetsgivareResponse;
 import se.fk.rimfrost.framework.folkbokford.adapter.dto.FolkbokfordResponse;
-import se.fk.rimfrost.framework.regel.integration.kundbehovsflode.dto.*;
+import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.*;
 import se.fk.rimfrost.framework.regel.logic.config.RegelConfig;
 import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning;
