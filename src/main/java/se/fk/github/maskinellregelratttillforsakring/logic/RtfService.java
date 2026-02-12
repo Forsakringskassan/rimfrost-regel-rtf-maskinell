@@ -15,8 +15,8 @@ import se.fk.rimfrost.framework.folkbokford.adapter.dto.ImmutableFolkbokfordRequ
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.integration.config.RegelConfigProvider;
 import se.fk.rimfrost.framework.regel.integration.kafka.RegelKafkaProducer;
-import se.fk.rimfrost.framework.regel.integration.kundbehovsflode.KundbehovsflodeAdapter;
-import se.fk.rimfrost.framework.regel.integration.kundbehovsflode.dto.ImmutableKundbehovsflodeRequest;
+import se.fk.rimfrost.framework.kundbehovsflode.adapter.KundbehovsflodeAdapter;
+import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.ImmutableKundbehovsflodeRequest;
 import se.fk.rimfrost.framework.regel.logic.RegelMapper;
 import se.fk.rimfrost.framework.regel.logic.config.RegelConfig;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;

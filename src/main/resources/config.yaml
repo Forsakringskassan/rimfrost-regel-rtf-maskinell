@@ -28,3 +28,6 @@ lagrum:
   paragraf: 7
   stycke: 2
   punkt: 3
+
+utokadUppgiftsbeskrivning:
+  beskrivning: "Maskinell kontroll som kollar om kunden är folkbokförd i sverige samt kollar om personen har en arbetsgivare"
