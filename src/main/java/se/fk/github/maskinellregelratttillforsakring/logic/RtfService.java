@@ -1,11 +1,10 @@
 package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.framework.arbetsgivare.adapter.ArbetsgivareAdapter;
@@ -13,30 +12,21 @@ import se.fk.rimfrost.framework.arbetsgivare.adapter.dto.ImmutableArbetsgivareRe
 import se.fk.rimfrost.framework.folkbokford.adapter.FolkbokfordAdapter;
 import se.fk.rimfrost.framework.folkbokford.adapter.dto.ImmutableFolkbokfordRequest;
 import se.fk.rimfrost.framework.regel.Utfall;
-import se.fk.rimfrost.framework.regel.integration.config.RegelConfigProvider;
-import se.fk.rimfrost.framework.regel.integration.kafka.RegelKafkaProducer;
-import se.fk.rimfrost.framework.kundbehovsflode.adapter.KundbehovsflodeAdapter;
-import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.ImmutableKundbehovsflodeRequest;
-import se.fk.rimfrost.framework.regel.logic.RegelMapper;
-import se.fk.rimfrost.framework.regel.logic.config.RegelConfig;
-import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
-import se.fk.rimfrost.framework.regel.logic.entity.ImmutableCloudEventData;
-import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
+import se.fk.rimfrost.framework.regel.logic.entity.ImmutableUnderlag;
+import se.fk.rimfrost.framework.regel.logic.entity.Underlag;
+import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 
 @ApplicationScoped
-public class RtfService implements RegelRequestHandlerInterface
+public class RtfService implements RegelMaskinellServiceInterface
 {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(RtfService.class);
 
    @Inject
-   RegelKafkaProducer regelKafkaProducer;
-
-   @Inject
-   RtfMapper mapper;
-
-   @Inject
-   RegelMapper regelMapper;
+   ObjectMapper objectMapper;
 
    @Inject
    FolkbokfordAdapter folkbokfordAdapter;
@@ -45,107 +35,74 @@ public class RtfService implements RegelRequestHandlerInterface
    ArbetsgivareAdapter arbetsgivareAdapter;
 
    @Inject
-   KundbehovsflodeAdapter kundbehovsflodeAdapter;
-
-   @Inject
    DmnService dmnService;
 
-   @Inject
-   RegelConfigProvider regelConfigProvider;
-
-   private RegelConfig regelConfig;
-
-   @PostConstruct
-   void init()
-   {
-      this.regelConfig = regelConfigProvider.getConfig();
-   }
-
-   @ConfigProperty(name = "kafka.source")
-   String kafkaSource;
-
-   @ConfigProperty(name = "mp.messaging.outgoing.regel-responses.topic")
-   String responseTopic;
-
    @Override
-   public void handleRegelRequest(RegelDataRequest request)
+   public RegelMaskinellResult processRegel(RegelMaskinellRequest regelRequest)
    {
-      try
-      {
-         processRegelRequest(request);
-      }
-      catch (JsonProcessingException e)
-      {
-         LOGGER.error("Failed to process request with ID: " + request.kundbehovsflodeId());
-      }
-   }
 
-   private void processRegelRequest(RegelDataRequest request) throws JsonProcessingException
-   {
-      // Hämta kundbehovsflöde
-      var kundbehovsflodeRequest = ImmutableKundbehovsflodeRequest.builder().kundbehovsflodeId(request.kundbehovsflodeId())
-            .build();
+      LOGGER.info("Started process regel for kundbehovsflodeId: {}", regelRequest.kundbehovsflodeId());
 
-      var kundbehovflodesResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(kundbehovsflodeRequest);
-
-      var cloudevent = ImmutableCloudEventData.builder()
-            .id(request.id())
-            .kogitoparentprociid(request.kogitoparentprociid())
-            .kogitoprocid(request.kogitoprocid())
-            .kogitoprocinstanceid(request.kogitoprocinstanceid())
-            .kogitoprocist(request.kogitoprocist())
-            .kogitoprocversion(request.kogitoprocversion())
-            .kogitorootprocid(request.kogitorootprocid())
-            .kogitorootprociid(request.kogitorootprociid())
-            .source(kafkaSource)
-            .type(responseTopic)
-            .build();
-
-      // Evaluera logik
-      var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(kundbehovflodesResponse.personnummer()).build();
-
+      var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(regelRequest.personnummer()).build();
       var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
 
-      var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(kundbehovflodesResponse.personnummer())
-            .build();
-
+      var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(regelRequest.personnummer()).build();
       var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
 
-      boolean folkbokfordFinns = folkbokfordResponse != null;
-
+      boolean folkbokford = folkbokfordResponse != null;
       boolean harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsnummer() != null;
 
-      String namespace = "https://se.fk/github/maskinellregelratttillforsakring";
+      var utfall = evaluteDmn(folkbokford, harAnstallning);
 
+      var folkbokfordUnderlag = createUnderlag("Folkbokförd", "1.0", folkbokfordResponse);
+      var arbetsgivareUnderlag = createUnderlag("Arbetsgivare", "1.0", arbetsgivareResponse);
+
+      LOGGER.info("Finished process regel for kundbehovsflodeId: {} with utfall: {}", regelRequest.kundbehovsflodeId(), utfall);
+
+      return ImmutableRegelMaskinellResult.builder()
+            .addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag)
+            .utfall(utfall)
+            .build();
+   }
+
+   private Utfall evaluteDmn(boolean folkbokford, boolean harAnstallning)
+   {
+      String namespace = "https://se.fk/github/maskinellregelratttillforsakring";
       String modelName = "RtfDecisionModel";
 
       var dmnRuntime = dmnService.getRuntime();
-
       var model = dmnRuntime.getModel(namespace, modelName);
 
       var ctx = dmnRuntime.newContext();
-
-      ctx.set("folkbokford", folkbokfordFinns);
-
+      ctx.set("folkbokford", folkbokford);
       ctx.set("harAnstallning", harAnstallning);
 
       var result = dmnRuntime.evaluateAll(model, ctx);
-
       var raw = result.getDecisionResultByName("utfall").getResult();
 
       String dmnValue = raw != null ? raw.toString() : "UTREDNING";
-
-      Utfall utfall = mapRtf(dmnValue);
-
-      kundbehovsflodeAdapter.updateKundbehovsflodeInfo(mapper.toUpdateKundbehovsflodeRequest(request.kundbehovsflodeId(),
-            folkbokfordResponse, arbetsgivareResponse, utfall, regelConfig, kundbehovflodesResponse));
-
-      var rtfResponse = regelMapper.toRegelResponse(request.kundbehovsflodeId(), cloudevent, utfall);
-      regelKafkaProducer.sendRegelResponse(rtfResponse);
+      return mapRtf(dmnValue);
    }
 
    private Utfall mapRtf(String dmnValue)
    {
       return switch(dmnValue){case"NEJ"->Utfall.NEJ;case"JA"->Utfall.JA;default->Utfall.UTREDNING;};
    }
+
+   private Underlag createUnderlag(String typ, String version, Object object)
+   {
+      try
+      {
+         return ImmutableUnderlag.builder()
+               .typ(typ)
+               .version(version)
+               .data(objectMapper.writeValueAsString(object))
+               .build();
+      }
+      catch (JsonProcessingException e)
+      {
+         throw new InternalError("Could not parse object to String", e);
+      }
+   }
+
 }

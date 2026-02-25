@@ -16,7 +16,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.framework.regel.*;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsflodeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
@@ -40,11 +43,9 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class RtfMaskinellTest
 {
 
-   private static final String regelRequestsChannel = "regel-requests";
-   private static final String regelResponsesChannel = "regel-responses";
-   private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule())
-         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-   private static final String kundbehovsflodeEndpoint = "/kundbehovsflode/";
+   @Inject
+   RtfService rtfService;
+
    private static final String folkbokforingEndpoint = "/folkbokforing/";
    private static final String arbetsgivareEndpoint = "/arbetsgivare/";
    private static WireMockServer wiremockServer;
@@ -116,28 +117,6 @@ public class RtfMaskinellTest
       return inMemoryConnector.sink(channel).received();
    }
 
-   private void sendRtfMaskinellRequest(String kundbehovsflodeId) throws Exception
-   {
-      RegelRequestMessagePayload payload = new RegelRequestMessagePayload();
-      RegelRequestMessagePayloadData data = new RegelRequestMessagePayloadData();
-      data.setKundbehovsflodeId(kundbehovsflodeId);
-      payload.setSpecversion(SpecVersion.NUMBER_1_DOT_0);
-      payload.setId("99994567-89ab-4cde-9012-3456789abcde");
-      payload.setSource("TestSource-001");
-      payload.setType(regelRequestsChannel);
-      payload.setKogitoprocid("234567");
-      payload.setKogitorootprocid("123456");
-      payload.setKogitorootprociid("77774567-89ab-4cde-9012-3456789abcde");
-      payload.setKogitoparentprociid("88884567-89ab-4cde-9012-3456789abcde");
-      payload.setKogitoprocinstanceid("66664567-89ab-4cde-9012-3456789abcde");
-      payload.setKogitoprocist("345678");
-      payload.setKogitoprocversion("111");
-      payload.setKogitoproctype(KogitoProcType.BPMN);
-      payload.setKogitoprocrefid("56789");
-      payload.setData(data);
-      inMemoryConnector.source(regelRequestsChannel).send(payload);
-   }
-
    @Test
    public void testHealthEndpoint()
    {
@@ -156,20 +135,23 @@ public class RtfMaskinellTest
          "5367f6b8-cc4a-11f0-8de9-199901012222, 19990101-2222, Ja, JA",
          "5367f6b8-cc4a-11f0-8de9-199901014444, 19990101-4444, Nej, NEJ"
    })
-   void TestRtfMaskinellSmoke(String kundbehovsflodeId,
+   void TestRtfMaskinellSmoke(UUID kundbehovsflodeId,
          String persnr,
          String expectedUtfall, Ersattning.BeslutsutfallEnum expectedBeslutsutfall) throws Exception
    {
       // Clear out any previous requests
       wiremockServer.resetRequests();
 
-      // Clear out any previous messages
-      inMemoryConnector.sink(regelResponsesChannel).clear();
-
       System.out.printf("Starting RtfMaskinellTest. %S%n", kundbehovsflodeId);
 
+      var request = ImmutableRegelMaskinellRequest.builder()
+            .kundbehovsflodeId(kundbehovsflodeId)
+            .personnummer(persnr)
+            .formanstyp("VAH")
+            .build();
+
       // Send Rtf maskinell request to start workflow
-      sendRtfMaskinellRequest(kundbehovsflodeId);
+      var result = rtfService.processRegel(request);
 
       // Verify folkbokföring requests
       var folkbokforingRequests = waitForWireMockRequest(wiremockServer, folkbokforingEndpoint + persnr, 1);
@@ -183,48 +165,9 @@ public class RtfMaskinellTest
       assertEquals(arbetsgivareEndpoint + persnr, arbetsgivareRequests.getFirst().getUrl());
       assertEquals(RequestMethod.GET, arbetsgivareRequests.getFirst().getMethod());
 
-      // Verify kundbehovsflöde requests
-      var kundbehovsflodeRequests = waitForWireMockRequest(wiremockServer,
-            kundbehovsflodeEndpoint + kundbehovsflodeId, 3);
+      assertEquals("Folkbokförd", result.underlag().getFirst().typ());
+      assertEquals("Arbetsgivare", result.underlag().getLast().typ());
 
-      assertEquals(3, kundbehovsflodeRequests.size());
-
-      for (var kundbehovsflodeRequest : kundbehovsflodeRequests)
-      {
-         assertEquals(kundbehovsflodeEndpoint + kundbehovsflodeId, kundbehovsflodeRequest.getUrl());
-      }
-
-      assertEquals(2, kundbehovsflodeRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.GET)).count());
-      assertEquals(1, kundbehovsflodeRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.PUT)).count());
-
-      var putRequest = kundbehovsflodeRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.PUT)).findFirst()
-            .orElseThrow();
-      var sentPutKundbehovsflodeRequest = mapper.readValue(putRequest.getBodyAsString(), PutKundbehovsflodeRequest.class);
-      assertEquals(UppgiftStatus.AVSLUTAD, sentPutKundbehovsflodeRequest.getUppgift().getUppgiftStatus());
-      assertEquals("TestUppgiftNamn", sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getNamn());
-      assertEquals("TestUppgiftBeskrivning",
-            sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getUppgiftbeskrivning());
-
-      var sentUnderlag = sentPutKundbehovsflodeRequest.getUppgift().getUnderlag();
-      assertEquals(2, sentUnderlag.size());
-      assertEquals("FolkbokfördUnderlag", sentUnderlag.getFirst().getTyp());
-      assertEquals("ArbetsgivareUnderlag", sentUnderlag.getLast().getTyp());
-
-      var sentKundBehov = sentPutKundbehovsflodeRequest.getUppgift().getKundbehovsflode().getKundbehov();
-      for (var ersattning : sentKundBehov.getErsattning())
-      {
-         assertEquals(expectedBeslutsutfall, ersattning.getBeslutsutfall());
-      }
-
-      // Verify rule response
-      var messages = waitForMessages(regelResponsesChannel);
-      assertEquals(1, messages.size());
-
-      var message = messages.getFirst().getPayload();
-      assertInstanceOf(RegelResponseMessagePayload.class, message);
-
-      var rtfMaskinellResponse = (RegelResponseMessagePayload) message;
-      assertEquals(kundbehovsflodeId, rtfMaskinellResponse.getData().getKundbehovsflodeId());
-      assertEquals(expectedUtfall, rtfMaskinellResponse.getData().getUtfall().getValue());
+      assertEquals(Utfall.fromValue(expectedUtfall), result.utfall());
    }
 }
