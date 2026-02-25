@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.5.0 (2026-02-25)
+
+### Features
+
+-  Update to use the new regel framework (#63) ([9cb03](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/9cb03e54c7dc2a6) NilsElveros)  
+
 ## 0.4.0 (2026-02-22)
 
 ### Features
