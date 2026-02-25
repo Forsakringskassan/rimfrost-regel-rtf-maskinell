@@ -2,6 +2,29 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.4.0 (2026-02-22)
+
+### Features
+
+-  send more data to kundebehovsflode service and add yamlfile (#51) ([29e8c](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/29e8c6cd7d11859) NilsElveros)  
+
+### Bug Fixes
+
+-  **deps**  update dependency se.fk.rimfrost.framework.arbetsgivare:rimfrost-framework-arbetsgivare-adapter to v0.1.0 ([bc51e](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/bc51e25f5a02150) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.api.arbetsgivare:rimfrost-arbetsgivare-api-jaxrs-spec to v1.1.5 ([c42e4](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/c42e42fc7a9895b) renovate[bot])  
+-  Bump rimfrost-framework-regel version ([8d2ac](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/8d2ac4e45abb061) Lars Persson)  
+-  Use kundbehovsflode adapter from rimfrost-framework-kundbehovsflode-adapter ([6ba0d](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/6ba0d71e32091ef) Lars Persson)  
+-  Use updated field names from arbetsgivare adapter response ([5c186](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/5c186c47df58830) Lars Persson)  
+-  Use arbetsgivare and folkbokford adapters from framework ([1051b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1051b88fcc4e00d) Lars Persson)  
+-  Add config path to application properties ([3f195](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/3f195ae2db96094) Lars Persson)  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v0.1.3 ([e6738](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/e6738c0b1c69044) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v0.1.2 ([0829a](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/0829aa668067cc6) renovate[bot])  
+-  Refactor test to use smallrye in-memory and test resources ([16e75](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/16e758a74070fbe) Lars Persson)  
+-  Use kundbehovsflode api from framework ([640c8](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/640c82bdd2105d5) Lars Persson)  
+-  RegelResponse source and type is now correct (#54) ([34220](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/3422081fb44eaa9) NilsElveros)  
+-  add type to RegelResponse (#53) ([22074](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/220747c6e37d4d0) NilsElveros)  
+-  Use consumer and producer from rimfrost-common ([e2b21](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/e2b21ab1babe11b) Lars Persson)  
+
 ## 0.3.0 (2026-01-15)
 
 ### Features
