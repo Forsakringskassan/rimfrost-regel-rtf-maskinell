@@ -2,6 +2,15 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.5.1 (2026-03-03)
+
+### Bug Fixes
+
+-  Bump to trigger release flow ([581a3](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/581a36f749ba856) Lars Persson)  
+-  **deps**  update dependency org.yaml:snakeyaml to v2.6 ([bf269](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/bf269771d5118b0) renovate[bot])  
+-  bump version (#65) ([aef61](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/aef61b80650559e) NilsElveros)  
+-  update framework version (#64) ([1124c](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1124c27e8a55520) NilsElveros)  
+
 ## 0.5.0 (2026-02-25)
 
 ### Features
