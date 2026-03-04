@@ -2,7 +2,6 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -41,7 +40,7 @@ public class RtfService implements RegelMaskinellServiceInterface
    public RegelMaskinellResult processRegel(RegelMaskinellRequest regelRequest)
    {
 
-      LOGGER.info("Started process regel for kundbehovsflodeId: {}", regelRequest.kundbehovsflodeId());
+      LOGGER.info("Started process regel for handlaggningId: {}", regelRequest.handlaggningId());
 
       var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(regelRequest.personnummer()).build();
       var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
@@ -57,7 +56,7 @@ public class RtfService implements RegelMaskinellServiceInterface
       var folkbokfordUnderlag = createUnderlag("Folkbokförd", "1.0", folkbokfordResponse);
       var arbetsgivareUnderlag = createUnderlag("Arbetsgivare", "1.0", arbetsgivareResponse);
 
-      LOGGER.info("Finished process regel for kundbehovsflodeId: {} with utfall: {}", regelRequest.kundbehovsflodeId(), utfall);
+      LOGGER.info("Finished process regel for handlaggningId: {} with utfall: {}", regelRequest.handlaggningId(), utfall);
 
       return ImmutableRegelMaskinellResult.builder()
             .addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag)
