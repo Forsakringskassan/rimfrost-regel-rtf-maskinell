@@ -2,9 +2,7 @@ package se.fk.github.maskinellregelratttillforsakring;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
-
 import java.util.Map;
-
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public class WireMockTestResource implements QuarkusTestResourceLifecycleManager
@@ -27,10 +25,10 @@ public class WireMockTestResource implements QuarkusTestResourceLifecycleManager
       server.start();
 
       return Map.of(
-            "quarkus.rest-client.kundbehovsflode.url", server.baseUrl(),
+            "quarkus.rest-client.yrkanden.url", server.baseUrl(),
             "folkbokford.api.base-url", server.baseUrl(),
             "arbetsgivare.api.base-url", server.baseUrl(),
-            "kundbehovsflode.api.base-url", server.baseUrl());
+            "handlaggning.api.base-url", server.baseUrl());
    }
 
    @Override

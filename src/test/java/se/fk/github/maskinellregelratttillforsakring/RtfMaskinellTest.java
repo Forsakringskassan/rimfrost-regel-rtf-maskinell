@@ -1,8 +1,5 @@
 package se.fk.github.maskinellregelratttillforsakring;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
@@ -16,14 +13,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.framework.regel.*;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsflodeRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -135,17 +127,17 @@ public class RtfMaskinellTest
          "5367f6b8-cc4a-11f0-8de9-199901012222, 19990101-2222, Ja",
          "5367f6b8-cc4a-11f0-8de9-199901014444, 19990101-4444, Nej"
    })
-   void TestRtfMaskinellSmoke(UUID kundbehovsflodeId,
+   void TestRtfMaskinellSmoke(UUID handlaggningId,
          String persnr,
          String expectedUtfall) throws Exception
    {
       // Clear out any previous requests
       wiremockServer.resetRequests();
 
-      System.out.printf("Starting RtfMaskinellTest. %S%n", kundbehovsflodeId);
+      System.out.printf("Starting RtfMaskinellTest. %S%n", handlaggningId);
 
       var request = ImmutableRegelMaskinellRequest.builder()
-            .kundbehovsflodeId(kundbehovsflodeId)
+            .handlaggningId(handlaggningId)
             .personnummer(persnr)
             .formanstyp("VAH")
             .build();
