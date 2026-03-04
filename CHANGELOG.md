@@ -2,6 +2,20 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.5.2 (2026-03-04)
+
+### Bug Fixes
+
+-  renaming handlaggning ([38dbb](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/38dbb32db9a86a3) Ulf Slunga)  
+
+### Other changes
+
+**tar bort onödig quarkus.rest-client.yrkanden.url i wiremock**
+
+
+[75c20](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/75c208072bbf7e4) Ulf Slunga *2026-03-04 13:10:45*
+
+
 ## 0.5.1 (2026-03-03)
 
 ### Bug Fixes
