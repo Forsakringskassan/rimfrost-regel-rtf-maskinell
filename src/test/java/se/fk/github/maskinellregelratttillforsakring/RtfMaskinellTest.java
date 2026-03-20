@@ -14,10 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableIndividYrkandeRoll;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableYrkande;
+import se.fk.rimfrost.framework.handlaggning.model.Yrkandestatus;
 import se.fk.rimfrost.framework.regel.*;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import static com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor;
@@ -136,10 +140,22 @@ public class RtfMaskinellTest
 
       System.out.printf("Starting RtfMaskinellTest. %S%n", handlaggningId);
 
+      var individ = ImmutableIndividYrkandeRoll.builder().individId(handlaggningId).yrkandeRollId(UUID.randomUUID()).build();
+
+      var yrkande = ImmutableYrkande.builder()
+            .id(UUID.randomUUID())
+            .addIndividYrkandeRoller(individ)
+            .erbjudandeId(UUID.randomUUID())
+            .version(1)
+            .yrkandeDatum(OffsetDateTime.now())
+            .yrkandeFrom(OffsetDateTime.now())
+            .yrkandeTom(OffsetDateTime.now())
+            .yrkandeStatus(Yrkandestatus.UNDER_UTREDNING)
+            .avsikt("avsikt")
+            .build();
+
       var request = ImmutableRegelMaskinellRequest.builder()
-            .handlaggningId(handlaggningId)
-            .personnummer(persnr)
-            .formanstyp("VAH")
+            .yrkande(yrkande)
             .build();
 
       // Send Rtf maskinell request to start workflow

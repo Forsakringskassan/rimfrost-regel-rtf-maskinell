@@ -1,0 +1,18 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/individ/5367f6b8-cc4a-11f0-8de9-199901012222"
+  },
+"response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json;charset=UTF-8"
+    },
+    "jsonBody": {
+      "id": "5367f6b8-cc4a-11f0-8de9-199901012222",
+      "typ": "Pnr",
+      "varde": "19990101-2222"
+    }
+  }
+}

@@ -10,9 +10,10 @@ import se.fk.rimfrost.framework.arbetsgivare.adapter.ArbetsgivareAdapter;
 import se.fk.rimfrost.framework.arbetsgivare.adapter.dto.ImmutableArbetsgivareRequest;
 import se.fk.rimfrost.framework.folkbokford.adapter.FolkbokfordAdapter;
 import se.fk.rimfrost.framework.folkbokford.adapter.dto.ImmutableFolkbokfordRequest;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableUnderlag;
+import se.fk.rimfrost.framework.handlaggning.model.Underlag;
+import se.fk.rimfrost.framework.individ.adapter.IndividAdapter;
 import se.fk.rimfrost.framework.regel.Utfall;
-import se.fk.rimfrost.framework.regel.logic.entity.ImmutableUnderlag;
-import se.fk.rimfrost.framework.regel.logic.entity.Underlag;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
@@ -34,32 +35,50 @@ public class RtfService implements RegelMaskinellServiceInterface
    ArbetsgivareAdapter arbetsgivareAdapter;
 
    @Inject
+   IndividAdapter individAdapter;
+
+   @Inject
    DmnService dmnService;
 
    @Override
    public RegelMaskinellResult processRegel(RegelMaskinellRequest regelRequest)
    {
 
-      LOGGER.info("Started process regel for handlaggningId: {}", regelRequest.handlaggningId());
+      LOGGER.info("Started process regel for yrkandeId: {}", regelRequest.yrkande().id());
 
-      var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(regelRequest.personnummer()).build();
-      var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+      boolean folkbokford = false;
+      boolean harAnstallning = false;
+      var builder = ImmutableRegelMaskinellResult.builder();
 
-      var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(regelRequest.personnummer()).build();
-      var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+      for (var individYrkandeRoll : regelRequest.yrkande().individYrkandeRoller())
+      {
+         var individ = individAdapter.getIndivid(individYrkandeRoll.individId());
 
-      boolean folkbokford = folkbokfordResponse != null;
-      boolean harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsnummer() != null;
+         var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(individ.varde()).build();
+         var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+
+         var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(individ.varde()).build();
+         var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+
+         var folkbokfordUnderlag = createUnderlag("Folkbokförd", 1, folkbokfordResponse);
+         var arbetsgivareUnderlag = createUnderlag("Arbetsgivare", 1, arbetsgivareResponse);
+
+         builder.addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag);
+
+         folkbokford = folkbokfordResponse != null;
+         harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsnummer() != null;
+
+         if (!folkbokford || !harAnstallning)
+         {
+            break;
+         }
+      }
 
       var utfall = evaluteDmn(folkbokford, harAnstallning);
 
-      var folkbokfordUnderlag = createUnderlag("Folkbokförd", "1.0", folkbokfordResponse);
-      var arbetsgivareUnderlag = createUnderlag("Arbetsgivare", "1.0", arbetsgivareResponse);
+      LOGGER.info("Finished process regel for yrkande: {} with utfall: {}", regelRequest.yrkande().id(), utfall);
 
-      LOGGER.info("Finished process regel for handlaggningId: {} with utfall: {}", regelRequest.handlaggningId(), utfall);
-
-      return ImmutableRegelMaskinellResult.builder()
-            .addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag)
+      return builder
             .utfall(utfall)
             .build();
    }
@@ -88,7 +107,7 @@ public class RtfService implements RegelMaskinellServiceInterface
       return switch(dmnValue){case"NEJ"->Utfall.NEJ;case"JA"->Utfall.JA;default->Utfall.UTREDNING;};
    }
 
-   private Underlag createUnderlag(String typ, String version, Object object)
+   private Underlag createUnderlag(String typ, int version, Object object)
    {
       try
       {
