@@ -1,9 +1,12 @@
 package se.fk.github.maskinellregelratttillforsakring.logic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.adapter.arbetsgivare.ArbetsgivareAdapter;
@@ -11,9 +14,12 @@ import se.fk.rimfrost.adapter.arbetsgivare.dto.ImmutableArbetsgivareRequest;
 import se.fk.rimfrost.adapter.folkbokford.FolkbokfordAdapter;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordRequest;
 import se.fk.rimfrost.adapter.individ.adapter.IndividAdapter;
-import se.fk.rimfrost.framework.handlaggning.model.ImmutableUnderlag;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
 import se.fk.rimfrost.framework.handlaggning.model.Underlag;
+import se.fk.rimfrost.framework.handlaggning.model.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.Utfall;
+import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
@@ -44,13 +50,13 @@ public class RtfService implements RegelMaskinellServiceInterface
    public RegelMaskinellResult processRegel(RegelMaskinellRequest regelRequest)
    {
 
-      LOGGER.info("Started process regel for yrkandeId: {}", regelRequest.yrkande().id());
+      LOGGER.info("Started process regel for yrkandeId: {}", regelRequest.handlaggning().yrkande().id());
 
       boolean folkbokford = false;
       boolean harAnstallning = false;
-      var builder = ImmutableRegelMaskinellResult.builder();
+      var underlag = new ArrayList<Underlag>();
 
-      for (var individYrkandeRoll : regelRequest.yrkande().individYrkandeRoller())
+      for (var individYrkandeRoll : regelRequest.handlaggning().yrkande().individYrkandeRoller())
       {
          var individ = individAdapter.getIndivid(individYrkandeRoll.individId());
 
@@ -60,10 +66,11 @@ public class RtfService implements RegelMaskinellServiceInterface
          var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(individ.varde()).build();
          var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
 
-         var folkbokfordUnderlag = createUnderlag("Folkbokförd", 1, folkbokfordResponse);
-         var arbetsgivareUnderlag = createUnderlag("Arbetsgivare", 1, arbetsgivareResponse);
+         var folkbokfordUnderlag = RegelUtils.createUnderlag("Folkbokförd", 1, folkbokfordResponse, objectMapper);
+         var arbetsgivareUnderlag = RegelUtils.createUnderlag("Arbetsgivare", 1, arbetsgivareResponse, objectMapper);
 
-         builder.addUnderlag(folkbokfordUnderlag, arbetsgivareUnderlag);
+         underlag.add(folkbokfordUnderlag);
+         underlag.add(arbetsgivareUnderlag);
 
          folkbokford = folkbokfordResponse != null;
          harAnstallning = arbetsgivareResponse != null && arbetsgivareResponse.organisationsnummer() != null;
@@ -76,10 +83,28 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       var utfall = evaluteDmn(folkbokford, harAnstallning);
 
-      LOGGER.info("Finished process regel for yrkande: {} with utfall: {}", regelRequest.yrkande().id(), utfall);
+      var uppgift = ImmutableUppgift.builder().from(regelRequest.uppgift())
+            .utfordTs(OffsetDateTime.now())
+            .uppgiftStatus(UppgiftStatus.AVSLUTAD)
+            .build();
 
-      return builder
+      var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
+            .id(regelRequest.handlaggning().id())
+            .version(regelRequest.handlaggning().version())
+            .yrkande(regelRequest.handlaggning().yrkande())
+            .processInstansId(regelRequest.handlaggning().processInstansId())
+            .skapadTS(regelRequest.handlaggning().skapadTS())
+            .avslutadTS(regelRequest.handlaggning().avslutadTS())
+            .handlaggningspecifikationId(regelRequest.handlaggning().handlaggningspecifikationId())
+            .underlag(underlag)
+            .uppgift(uppgift)
+            .build();
+
+      LOGGER.info("Finished process regel for yrkande: {} with utfall: {}", regelRequest.handlaggning().yrkande().id(), utfall);
+
+      return ImmutableRegelMaskinellResult.builder()
             .utfall(utfall)
+            .handlaggningUpdate(handlaggningUpdate)
             .build();
    }
 
@@ -106,21 +131,4 @@ public class RtfService implements RegelMaskinellServiceInterface
    {
       return switch(dmnValue){case"NEJ"->Utfall.NEJ;case"JA"->Utfall.JA;default->Utfall.UTREDNING;};
    }
-
-   private Underlag createUnderlag(String typ, int version, Object object)
-   {
-      try
-      {
-         return ImmutableUnderlag.builder()
-               .typ(typ)
-               .version(version)
-               .data(objectMapper.writeValueAsString(object))
-               .build();
-      }
-      catch (JsonProcessingException e)
-      {
-         throw new InternalError("Could not parse object to String", e);
-      }
-   }
-
 }
