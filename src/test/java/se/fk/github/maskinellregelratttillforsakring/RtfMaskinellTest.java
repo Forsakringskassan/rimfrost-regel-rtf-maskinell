@@ -14,8 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
+import se.fk.rimfrost.framework.handlaggning.model.FSSAinformation;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableIndividYrkandeRoll;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgiftSpecifikation;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableYrkande;
+import se.fk.rimfrost.framework.handlaggning.model.UppgiftStatus;
 import se.fk.rimfrost.framework.handlaggning.model.Yrkandestatus;
 import se.fk.rimfrost.framework.regel.*;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellRequest;
@@ -154,8 +159,34 @@ public class RtfMaskinellTest
             .avsikt("avsikt")
             .build();
 
-      var request = ImmutableRegelMaskinellRequest.builder()
+      var handlaggning = ImmutableHandlaggning.builder()
+            .id(UUID.randomUUID())
+            .version(1)
             .yrkande(yrkande)
+            .processInstansId(UUID.randomUUID())
+            .skapadTS(OffsetDateTime.now())
+            .handlaggningspecifikationId(UUID.randomUUID())
+            .build();
+
+      var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
+            .id(UUID.randomUUID())
+            .version(1)
+            .build();
+
+      var uppgift = ImmutableUppgift.builder()
+            .id(UUID.randomUUID())
+            .version(1)
+            .skapadTs(OffsetDateTime.now())
+            .utforarId(UUID.randomUUID())
+            .uppgiftStatus(UppgiftStatus.TILLDELAD)
+            .aktivitetId(UUID.randomUUID())
+            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
+            .uppgiftSpecifikation(uppgiftSpecifikation)
+            .build();
+
+      var request = ImmutableRegelMaskinellRequest.builder()
+            .handlaggning(handlaggning)
+            .uppgift(uppgift)
             .build();
 
       // Send Rtf maskinell request to start workflow
@@ -173,8 +204,8 @@ public class RtfMaskinellTest
       assertEquals(arbetsgivareEndpoint + persnr, arbetsgivareRequests.getFirst().getUrl());
       assertEquals(RequestMethod.GET, arbetsgivareRequests.getFirst().getMethod());
 
-      assertEquals("Folkbokförd", result.underlag().getFirst().typ());
-      assertEquals("Arbetsgivare", result.underlag().getLast().typ());
+      assertEquals("Folkbokförd", result.handlaggningUpdate().underlag().getFirst().typ());
+      assertEquals("Arbetsgivare", result.handlaggningUpdate().underlag().getLast().typ());
 
       assertEquals(Utfall.fromValue(expectedUtfall), result.utfall());
    }
