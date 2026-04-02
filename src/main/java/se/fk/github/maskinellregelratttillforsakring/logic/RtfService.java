@@ -92,7 +92,7 @@ public class RtfService implements RegelMaskinellServiceInterface
             .id(regelRequest.handlaggning().id())
             .version(regelRequest.handlaggning().version())
             .yrkande(regelRequest.handlaggning().yrkande())
-            .processInstansId(regelRequest.handlaggning().processInstansId())
+            .processInstansId(regelRequest.processInstansId())
             .skapadTS(regelRequest.handlaggning().skapadTS())
             .avslutadTS(regelRequest.handlaggning().avslutadTS())
             .handlaggningspecifikationId(regelRequest.handlaggning().handlaggningspecifikationId())
