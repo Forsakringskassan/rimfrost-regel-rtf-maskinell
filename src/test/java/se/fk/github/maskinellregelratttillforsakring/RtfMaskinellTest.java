@@ -187,10 +187,14 @@ public class RtfMaskinellTest
       var request = ImmutableRegelMaskinellRequest.builder()
             .handlaggning(handlaggning)
             .uppgift(uppgift)
+            .processInstansId(UUID.randomUUID())
             .build();
 
       // Send Rtf maskinell request to start workflow
       var result = rtfService.processRegel(request);
+
+      // Verify processInstansId
+      assertEquals(request.processInstansId(), result.handlaggningUpdate().processInstansId());
 
       // Verify folkbokföring requests
       var folkbokforingRequests = waitForWireMockRequest(wiremockServer, folkbokforingEndpoint + persnr, 1);
