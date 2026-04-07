@@ -2,6 +2,21 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.5.3 (2026-04-02)
+
+### Bug Fixes
+
+-  Use processInstansId from RegelMaskinellRequest ([33002](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/33002372e1f852c) Lars Persson)  
+-  update framework to 0.0.21 (#73) ([2af71](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2af712c861eb51d) NilsElveros)  
+-  bump framework version (#72) ([96287](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/9628734ec2c11d0) NilsElveros)  
+-  update to new framework version (#71) ([19f74](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/19f7476be898040) NilsElveros)  
+-  Use non-framework version of adapters ([2819d](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2819d11527a26f9) Lars Persson)  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel.maskinell:rimfrost-framework-regel-maskinell to v0.0.15 ([fbbce](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/fbbcef7f4f0f4f0) renovate[bot])  
+-  Fix malformed config.yaml after latest framework update ([efefd](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/efefd2bf7987424) Lars Persson)  
+-  update to new framework version (#68) ([d95be](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/d95be036394eaaf) NilsElveros)  
+-  bump framework version (#67) ([07d98](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/07d982b5f82cecb) NilsElveros)  
+-  **deps**  update dependency se.fk.maven:fk-maven-quarkus-parent to v1.12.0 ([908a7](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/908a77b068cee68) renovate[bot])  
+
 ## 0.5.2 (2026-03-04)
 
 ### Bug Fixes
