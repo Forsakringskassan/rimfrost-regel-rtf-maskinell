@@ -79,7 +79,12 @@
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel.maskinell</groupId>
       <artifactId>rimfrost-framework-regel-maskinell</artifactId>
-      <version>0.0.22</version>
+      <version>0.0.24</version>
+    </dependency>
+    <dependency>
+      <groupId>se.fk.rimfrost.framework.regel.maskinell</groupId>
+      <artifactId>rimfrost-framework-regel-maskinell-test-base</artifactId>
+      <version>0.0.24</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.adapter.arbetsgivare</groupId>
