@@ -8,16 +8,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.framework.regel.Utfall;
+import se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestBase;
+
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
+import static se.fk.rimfrost.framework.regel.test.WireMockHandlaggning.waitForRequest;
 
 @QuarkusTest
 @QuarkusTestResource.List(
 {
       @QuarkusTestResource(WireMockTestResource.class)
 })
-public class RtfMaskinellProcessRegelTest extends AbstractRtfMaskinellTest
+public class RtfMaskinellProcessRegelTest extends RegelMaskinellTestBase
 {
 
    @Inject
@@ -29,12 +33,12 @@ public class RtfMaskinellProcessRegelTest extends AbstractRtfMaskinellTest
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234"
+         "19990101-1234"
    })
-   void process_regel_should_return_correct_process_instans_id(UUID handlaggningId)
+   void process_regel_should_return_correct_process_instans_id(String persnr)
    {
 
-      var request = newRegelMaskinellRequest(handlaggningId);
+      var request = newRegelMaskinellRequest(persnr);
 
       var result = rtfService.processRegel(request);
 
@@ -45,51 +49,47 @@ public class RtfMaskinellProcessRegelTest extends AbstractRtfMaskinellTest
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234, 19990101-1234",
-         "5367f6b8-cc4a-11f0-8de9-199901013333, 19990101-3333"
+         "19990101-1234",
+         "19990101-3333"
    })
-   void process_regel_should_produce_folkbokforing_requests(UUID handlaggningId,
-         String persnr)
+   void process_regel_should_produce_folkbokforing_requests(String persnr)
    {
-      var request = newRegelMaskinellRequest(handlaggningId);
+      var request = newRegelMaskinellRequest(persnr);
 
       rtfService.processRegel(request);
 
       // Verify folkbokföring requests
-      var folkbokforingRequests = waitForWireMockRequest(wiremockServer, folkbokforingEndpoint + persnr, 1);
+      var folkbokforingRequests = waitForRequest(folkbokforingEndpoint + persnr, RequestMethod.GET, 1);
       assertEquals(1, folkbokforingRequests.size());
       assertEquals(folkbokforingEndpoint + persnr, folkbokforingRequests.getFirst().getUrl());
-      assertEquals(RequestMethod.GET, folkbokforingRequests.getFirst().getMethod());
    }
 
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234, 19990101-1234",
-         "5367f6b8-cc4a-11f0-8de9-199901013333, 19990101-3333"
+         "19990101-1234",
+         "19990101-3333"
    })
-   void process_regel_should_produce_arbetsgivare_requests(UUID handlaggningId,
-         String persnr)
+   void process_regel_should_produce_arbetsgivare_requests(String persnr)
    {
-      var request = newRegelMaskinellRequest(handlaggningId);
+      var request = newRegelMaskinellRequest(persnr);
 
       rtfService.processRegel(request);
 
       // Verify arbetsgivare requests
-      var arbetsgivareRequests = waitForWireMockRequest(wiremockServer, arbetsgivareEndpoint + persnr, 1);
+      var arbetsgivareRequests = waitForRequest(arbetsgivareEndpoint + persnr, RequestMethod.GET, 1);
       assertEquals(1, arbetsgivareRequests.size());
       assertEquals(arbetsgivareEndpoint + persnr, arbetsgivareRequests.getFirst().getUrl());
-      assertEquals(RequestMethod.GET, arbetsgivareRequests.getFirst().getMethod());
    }
 
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234"
+         "19990101-1234"
    })
-   void process_regel_should_return_correct_underlag(UUID handlaggningId)
+   void process_regel_should_return_correct_underlag(String persnr)
    {
-      var request = newRegelMaskinellRequest(handlaggningId);
+      var request = newRegelMaskinellRequest(persnr);
 
       var result = rtfService.processRegel(request);
 
@@ -102,15 +102,30 @@ public class RtfMaskinellProcessRegelTest extends AbstractRtfMaskinellTest
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234, Ja",
-         "5367f6b8-cc4a-11f0-8de9-199901013333, Utredning",
-         "5367f6b8-cc4a-11f0-8de9-199901012222, Ja",
-         "5367f6b8-cc4a-11f0-8de9-199901014444, Nej"
+         "19990101-1234"
    })
-   void process_regel_should_return_correct_utfall(UUID handlaggningId,
+   void process_regel_should_set_uppgift_uppgiftStatus_and_utfordTs_fields(String persnr)
+   {
+      var request = newRegelMaskinellRequest(persnr);
+
+      var result = rtfService.processRegel(request);
+
+      assertEquals("3", result.handlaggningUpdate().uppgift().uppgiftStatus());
+      assertNotNull(result.handlaggningUpdate().uppgift().utfordTs());
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "19990101-1234, Ja",
+         "19990101-3333, Utredning",
+         "19990101-2222, Ja",
+         "19990101-4444, Nej"
+   })
+   void process_regel_should_return_correct_utfall(String persnr,
          String expectedUtfall)
    {
-      var request = newRegelMaskinellRequest(handlaggningId);
+      var request = newRegelMaskinellRequest(persnr);
 
       var result = rtfService.processRegel(request);
 

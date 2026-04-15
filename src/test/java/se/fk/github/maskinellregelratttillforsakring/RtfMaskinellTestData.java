@@ -9,23 +9,28 @@ import java.util.UUID;
 public class RtfMaskinellTestData
 {
 
-   public static RegelMaskinellRequest newRegelMaskinellRequest(UUID handlaggningId)
+   public static RegelMaskinellRequest newRegelMaskinellRequest(String persnr)
    {
 
+      var idTyp = ImmutableIdtyp.builder()
+            .typId(UUID.randomUUID().toString())
+            .varde(persnr)
+            .build();
+
       var individ = ImmutableIndividYrkandeRoll.builder()
-            .individId(handlaggningId)
-            .yrkandeRollId(UUID.randomUUID())
+            .individ(idTyp)
+            .yrkandeRollId(UUID.randomUUID().toString())
             .build();
 
       var yrkande = ImmutableYrkande.builder()
             .id(UUID.randomUUID())
             .addIndividYrkandeRoller(individ)
-            .erbjudandeId(UUID.randomUUID())
+            .erbjudandeId(UUID.randomUUID().toString())
             .version(1)
             .yrkandeDatum(OffsetDateTime.now())
             .yrkandeFrom(OffsetDateTime.now())
             .yrkandeTom(OffsetDateTime.now())
-            .yrkandeStatus(Yrkandestatus.UNDER_UTREDNING)
+            .yrkandeStatus("UNDER_UTREDNING")
             .avsikt("avsikt")
             .build();
 
@@ -43,14 +48,19 @@ public class RtfMaskinellTestData
             .version(1)
             .build();
 
+      var utforare = ImmutableIdtyp.builder()
+            .typId(UUID.randomUUID().toString())
+            .varde(UUID.randomUUID().toString())
+            .build();
+
       var uppgift = ImmutableUppgift.builder()
             .id(UUID.randomUUID())
             .version(1)
             .skapadTs(OffsetDateTime.now())
-            .utforarId(UUID.randomUUID())
-            .uppgiftStatus(UppgiftStatus.TILLDELAD)
+            .utforarId(utforare)
+            .uppgiftStatus("2") // TILLDELAD
             .aktivitetId(UUID.randomUUID())
-            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
+            .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace when correct value is available
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
 

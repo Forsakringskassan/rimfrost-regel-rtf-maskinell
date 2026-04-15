@@ -13,17 +13,16 @@ import se.fk.rimfrost.adapter.arbetsgivare.ArbetsgivareAdapter;
 import se.fk.rimfrost.adapter.arbetsgivare.dto.ImmutableArbetsgivareRequest;
 import se.fk.rimfrost.adapter.folkbokford.FolkbokfordAdapter;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordRequest;
-import se.fk.rimfrost.adapter.individ.adapter.IndividAdapter;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
 import se.fk.rimfrost.framework.handlaggning.model.Underlag;
-import se.fk.rimfrost.framework.handlaggning.model.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
+import se.fk.rimfrost.framework.uppgiftstatusprovider.UppgiftStatusProvider;
 
 @ApplicationScoped
 public class RtfService implements RegelMaskinellServiceInterface
@@ -41,7 +40,7 @@ public class RtfService implements RegelMaskinellServiceInterface
    ArbetsgivareAdapter arbetsgivareAdapter;
 
    @Inject
-   IndividAdapter individAdapter;
+   UppgiftStatusProvider uppgiftStatusProvider;
 
    @Inject
    DmnService dmnService;
@@ -58,7 +57,7 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       for (var individYrkandeRoll : regelRequest.handlaggning().yrkande().individYrkandeRoller())
       {
-         var individ = individAdapter.getIndivid(individYrkandeRoll.individId());
+         var individ = individYrkandeRoll.individ();
 
          var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(individ.varde()).build();
          var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
@@ -85,7 +84,7 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       var uppgift = ImmutableUppgift.builder().from(regelRequest.uppgift())
             .utfordTs(OffsetDateTime.now())
-            .uppgiftStatus(UppgiftStatus.AVSLUTAD)
+            .uppgiftStatus(uppgiftStatusProvider.getAvslutadId())
             .build();
 
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
