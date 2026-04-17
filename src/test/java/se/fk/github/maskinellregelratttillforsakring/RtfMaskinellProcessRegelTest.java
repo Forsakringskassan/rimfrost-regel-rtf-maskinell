@@ -8,9 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.framework.regel.Utfall;
-import se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestBase;
-
 import java.util.UUID;
+import se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestBase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
@@ -19,7 +18,7 @@ import static se.fk.rimfrost.framework.regel.test.WireMockHandlaggning.waitForRe
 @QuarkusTest
 @QuarkusTestResource.List(
 {
-      @QuarkusTestResource(WireMockTestResource.class)
+      @QuarkusTestResource(WireMockRtfMaskinell.class)
 })
 public class RtfMaskinellProcessRegelTest extends RegelMaskinellTestBase
 {
@@ -59,7 +58,7 @@ public class RtfMaskinellProcessRegelTest extends RegelMaskinellTestBase
       rtfService.processRegel(request);
 
       // Verify folkbokföring requests
-      var folkbokforingRequests = waitForRequest(folkbokforingEndpoint + persnr, RequestMethod.GET, 1);
+      var folkbokforingRequests = WireMockRtfMaskinell.waitForRequest(folkbokforingEndpoint + persnr, RequestMethod.GET, 1);
       assertEquals(1, folkbokforingRequests.size());
       assertEquals(folkbokforingEndpoint + persnr, folkbokforingRequests.getFirst().getUrl());
    }
@@ -77,7 +76,7 @@ public class RtfMaskinellProcessRegelTest extends RegelMaskinellTestBase
       rtfService.processRegel(request);
 
       // Verify arbetsgivare requests
-      var arbetsgivareRequests = waitForRequest(arbetsgivareEndpoint + persnr, RequestMethod.GET, 1);
+      var arbetsgivareRequests = WireMockRtfMaskinell.waitForRequest(arbetsgivareEndpoint + persnr, RequestMethod.GET, 1);
       assertEquals(1, arbetsgivareRequests.size());
       assertEquals(arbetsgivareEndpoint + persnr, arbetsgivareRequests.getFirst().getUrl());
    }
@@ -122,8 +121,7 @@ public class RtfMaskinellProcessRegelTest extends RegelMaskinellTestBase
          "19990101-2222, Ja",
          "19990101-4444, Nej"
    })
-   void process_regel_should_return_correct_utfall(String persnr,
-         String expectedUtfall)
+   void process_regel_should_return_correct_utfall(String persnr, String expectedUtfall)
    {
       var request = newRegelMaskinellRequest(persnr);
 
