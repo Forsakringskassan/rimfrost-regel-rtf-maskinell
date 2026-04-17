@@ -2,6 +2,15 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.5.4 (2026-04-17)
+
+### Bug Fixes
+
+-  tar bort onödig dependency i test application.properties ([b2bde](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/b2bde1b50c7d8dc) Ulf Slunga)  
+-  refactoring av wiremock. fixar för uppgiftstatus och individ-id. ([2879a](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2879a15d3b4a9c8) Ulf Slunga)  
+-  Bump rimfrost-framework-regel-maskinell version ([2fed0](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/2fed0e017081df4) Lars Persson)  
+-  testHealth till separat test-class. Använder test-base framework. Använder loadTestProperties från rimfrost-framework-regel. ([7e2ab](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/7e2ab09926d2865) Ulf Slunga)  
+
 ## 0.5.3 (2026-04-02)
 
 ### Bug Fixes
