@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.is;
 @QuarkusTest
 @QuarkusTestResource.List(
 {
-      @QuarkusTestResource(WireMockTestResource.class)
+      @QuarkusTestResource(WireMockRtfMaskinell.class)
 })
 public class RtfMaskinellHealthTest
 {
