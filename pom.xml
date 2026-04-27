@@ -58,12 +58,7 @@
       <version>10.1.0</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>kafka</artifactId>
-      <version>1.21.4</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
@@ -79,12 +74,7 @@
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel</artifactId>
-      <version>0.4.2</version>
-    </dependency>
-    <dependency>
-      <groupId>se.fk.rimfrost.framework.regel</groupId>
-      <artifactId>rimfrost-framework-regel</artifactId>
-      <version>0.4.2</version>
+      <version>0.4.4</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
