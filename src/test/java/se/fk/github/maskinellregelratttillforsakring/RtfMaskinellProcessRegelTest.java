@@ -8,19 +8,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.framework.regel.Utfall;
-import java.util.UUID;
-import se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestBase;
+import se.fk.rimfrost.framework.regel.maskinell.base.AbstractRegelMaskinellTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
-import static se.fk.rimfrost.framework.regel.test.WireMockHandlaggning.waitForRequest;
 
 @QuarkusTest
 @QuarkusTestResource.List(
 {
       @QuarkusTestResource(WireMockRtfMaskinell.class)
 })
-public class RtfMaskinellProcessRegelTest extends RegelMaskinellTestBase
+public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
 {
 
    @Inject
