@@ -77,14 +77,28 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>se.fk.rimfrost.framework.regel.maskinell</groupId>
-      <artifactId>rimfrost-framework-regel-maskinell</artifactId>
-      <version>0.0.30</version>
+      <groupId>se.fk.rimfrost.framework.regel</groupId>
+      <artifactId>rimfrost-framework-regel</artifactId>
+      <version>0.4.2</version>
+    </dependency>
+    <dependency>
+      <groupId>se.fk.rimfrost.framework.regel</groupId>
+      <artifactId>rimfrost-framework-regel</artifactId>
+      <version>0.4.2</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel.maskinell</groupId>
-      <artifactId>rimfrost-framework-regel-maskinell-test-base</artifactId>
-      <version>0.0.30</version>
+      <artifactId>rimfrost-framework-regel-maskinell</artifactId>
+      <version>0.0.32</version>
+    </dependency>
+    <dependency>
+      <groupId>se.fk.rimfrost.framework.regel.maskinell</groupId>
+      <artifactId>rimfrost-framework-regel-maskinell</artifactId>
+      <version>0.0.32</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.adapter.arbetsgivare</groupId>
