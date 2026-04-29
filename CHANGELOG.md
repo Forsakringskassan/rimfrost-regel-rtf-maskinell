@@ -2,6 +2,29 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.0.0 (2026-04-29)
+
+### Breaking changes
+
+-  release 1.0 (#82) ([4c93f](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/4c93f697291e1c9) NilsElveros)  
+
+### Features
+
+-  release 1.0 (#82) ([4c93f](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/4c93f697291e1c9) NilsElveros)  
+
+### Bug Fixes
+
+-  tar bort onödiga dependencies. bumpar rimfrost-framework-regel till 0.4.4 ([8ef0d](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/8ef0df434896357) Ulf Slunga)  
+-  använder testfall från framework. ([c7dea](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/c7deab35793cfa6) Ulf Slunga)  
+-  **deps**  update dependency org.kie:kie-dmn-core to v10.2.0 ([7d027](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/7d027ae75b36d3c) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel.maskinell:rimfrost-framework-regel-maskinell-test-base to v0.0.30 ([94ec5](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/94ec54fe0cebfcf) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel.maskinell:rimfrost-framework-regel-maskinell-test-base to v0.0.29 ([32327](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/32327c70f35d820) renovate[bot])  
+-  inherit some props from framework (#79) ([825df](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/825df76c77db5c1) NilsElveros)  
+-  Bump rimfrost-framework-regel-maskinell version ([14941](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/14941b41721d215) Lars Persson)  
+
+### Dependency updates
+
+- update dependency org.kie.kogito:kogito-quarkus-test-utils to v10.2.0 ([404f4](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/404f4f41c5b91fb) renovate[bot])  
 ## 0.5.4 (2026-04-17)
 
 ### Bug Fixes
