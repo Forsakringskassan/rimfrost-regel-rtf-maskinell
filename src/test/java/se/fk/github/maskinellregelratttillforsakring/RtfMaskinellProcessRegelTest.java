@@ -9,7 +9,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.maskinell.base.AbstractRegelMaskinellTest;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellSuccessResult;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
 
@@ -39,8 +42,12 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
 
       var result = rtfService.processRegel(request);
 
+      // Verify result type
+      assertInstanceOf(RegelMaskinellSuccessResult.class, result);
+
       // Verify process instance id
-      assertEquals(request.processInstansId(), result.handlaggningUpdate().processInstansId());
+      var successResult = (RegelMaskinellSuccessResult) result;
+      assertEquals(request.processInstansId(), successResult.handlaggningUpdate().processInstansId());
    }
 
    @ParameterizedTest
@@ -90,9 +97,13 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
 
       var result = rtfService.processRegel(request);
 
+      // Verify result type
+      assertInstanceOf(RegelMaskinellSuccessResult.class, result);
+
       // Verify underlag
-      assertEquals("Folkbokförd", result.handlaggningUpdate().underlag().getFirst().typ());
-      assertEquals("Arbetsgivare", result.handlaggningUpdate().underlag().getLast().typ());
+      var successResult = (RegelMaskinellSuccessResult) result;
+      assertEquals("Folkbokförd", successResult.handlaggningUpdate().underlag().getFirst().typ());
+      assertEquals("Arbetsgivare", successResult.handlaggningUpdate().underlag().getLast().typ());
 
    }
 
@@ -107,8 +118,12 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
 
       var result = rtfService.processRegel(request);
 
-      assertEquals("3", result.handlaggningUpdate().uppgift().uppgiftStatus());
-      assertNotNull(result.handlaggningUpdate().uppgift().utfordTs());
+      // Verify result type
+      assertInstanceOf(RegelMaskinellSuccessResult.class, result);
+
+      var successResult = (RegelMaskinellSuccessResult) result;
+      assertEquals("3", successResult.handlaggningUpdate().uppgift().uppgiftStatus());
+      assertNotNull(successResult.handlaggningUpdate().uppgift().utfordTs());
    }
 
    @ParameterizedTest
@@ -125,8 +140,12 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
 
       var result = rtfService.processRegel(request);
 
+      // Verify result type
+      assertInstanceOf(RegelMaskinellSuccessResult.class, result);
+
       // Verify utfall
-      assertEquals(Utfall.fromValue(expectedUtfall), result.utfall());
+      var successResult = (RegelMaskinellSuccessResult) result;
+      assertEquals(Utfall.fromValue(expectedUtfall), successResult.utfall());
 
    }
 }
