@@ -5,21 +5,32 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import jakarta.ws.rs.WebApplicationException;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.adapter.arbetsgivare.ArbetsgivareAdapter;
+import se.fk.rimfrost.adapter.arbetsgivare.dto.ArbetsgivareResponse;
 import se.fk.rimfrost.adapter.arbetsgivare.dto.ImmutableArbetsgivareRequest;
 import se.fk.rimfrost.adapter.folkbokford.FolkbokfordAdapter;
+import se.fk.rimfrost.adapter.folkbokford.dto.FolkbokfordResponse;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordRequest;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
 import se.fk.rimfrost.framework.handlaggning.model.Underlag;
+import se.fk.rimfrost.framework.regel.RegelErrorInformation;
+import se.fk.rimfrost.framework.regel.RegelFelkod;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
-import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellErrorResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellSuccessResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.uppgiftstatusprovider.UppgiftStatusProvider;
 
 @ApplicationScoped
@@ -43,6 +54,9 @@ public class RtfService implements RegelMaskinellServiceInterface
    @Inject
    DmnService dmnService;
 
+   @ConfigProperty(name = "rimfrost.framework.regel.maskinell.retry.intervals")
+   List<Integer> retryIntervals;
+
    @Override
    public RegelMaskinellResult processRegel(RegelMaskinellRequest regelRequest)
    {
@@ -57,11 +71,39 @@ public class RtfService implements RegelMaskinellServiceInterface
       {
          var individ = individYrkandeRoll.individ();
 
-         var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(individ.varde()).build();
-         var folkbokfordResponse = folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest);
+         FolkbokfordResponse folkbokfordResponse = null;
+         try
+         {
+            folkbokfordResponse = RetryUtil.getWithRetries(() -> getFolkbokfordResponse(individ.varde()), retryIntervals);
+         }
+         catch (RetriesExhaustedException e)
+         {
+            LOGGER.error("Failed to read folkbokford response", e);
 
-         var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(individ.varde()).build();
-         var arbetsgivareResponse = arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest);
+            return ImmutableRegelMaskinellErrorResult.builder()
+                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
+                        "Failed to read folkbokford response. Handlaggning id: " + regelRequest.handlaggning().id()
+                              + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
+                              + regelRequest.uppgift().aktivitetId()))
+                  .build();
+         }
+
+         ArbetsgivareResponse arbetsgivareResponse = null;
+         try
+         {
+            arbetsgivareResponse = RetryUtil.getWithRetries(() -> getArbetsgivareResponse(individ.varde()), retryIntervals);
+         }
+         catch (RetriesExhaustedException e)
+         {
+            LOGGER.error("Failed to read arbetsgivare response", e);
+
+            return ImmutableRegelMaskinellErrorResult.builder()
+                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
+                        "Failed to read arbetsgivare response. Handlaggning id: " + regelRequest.handlaggning().id()
+                              + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
+                              + regelRequest.uppgift().aktivitetId()))
+                  .build();
+         }
 
          var folkbokfordUnderlag = RegelUtils.createUnderlag("Folkbokförd", 1, folkbokfordResponse, objectMapper);
          var arbetsgivareUnderlag = RegelUtils.createUnderlag("Arbetsgivare", 1, arbetsgivareResponse, objectMapper);
@@ -99,7 +141,7 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       LOGGER.info("Finished process regel for yrkande: {} with utfall: {}", regelRequest.handlaggning().yrkande().id(), utfall);
 
-      return ImmutableRegelMaskinellResult.builder()
+      return ImmutableRegelMaskinellSuccessResult.builder()
             .utfall(utfall)
             .handlaggningUpdate(handlaggningUpdate)
             .build();
@@ -127,5 +169,40 @@ public class RtfService implements RegelMaskinellServiceInterface
    private Utfall mapRtf(String dmnValue)
    {
       return switch(dmnValue){case"NEJ"->Utfall.NEJ;case"JA"->Utfall.JA;default->Utfall.UTREDNING;};
+   }
+
+   private Result<FolkbokfordResponse> getFolkbokfordResponse(String personnummer)
+   {
+      try
+      {
+         var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(personnummer).build();
+         return Result.of(folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest));
+      }
+      catch (WebApplicationException e)
+      {
+         return Result.empty();
+      }
+   }
+
+   private Result<ArbetsgivareResponse> getArbetsgivareResponse(String personnummer)
+   {
+      try
+      {
+         var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(personnummer).build();
+         return Result.of(arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest));
+      }
+      catch (WebApplicationException e)
+      {
+         return Result.empty();
+      }
+   }
+
+   private RegelErrorInformation createRegelErrorInformation(RegelFelkod felkod, String meddelande)
+   {
+      RegelErrorInformation regelErrorInformation = new RegelErrorInformation();
+      regelErrorInformation.setFelkod(felkod);
+      regelErrorInformation.setFelmeddelande(meddelande);
+
+      return regelErrorInformation;
    }
 }
