@@ -7,13 +7,16 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
+import se.fk.rimfrost.framework.regel.RegelFelkod;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.maskinell.base.AbstractRegelMaskinellTest;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellErrorResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellSuccessResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
 
 @QuarkusTest
@@ -132,7 +135,8 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
          "19990101-1234, Ja",
          "19990101-3333, Utredning",
          "19990101-2222, Ja",
-         "19990101-4444, Nej"
+         "19990101-4444, Nej",
+         "19990101-9999, Ja"
    })
    void process_regel_should_return_correct_utfall(String persnr, String expectedUtfall)
    {
@@ -147,5 +151,29 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
       var successResult = (RegelMaskinellSuccessResult) result;
       assertEquals(Utfall.fromValue(expectedUtfall), successResult.utfall());
 
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "19990102-9999, (?i)^Failed to read arbetsgivare response\\..*",
+         "19990103-9999, (?i)^Failed to read folkbokford response\\..*"
+   })
+   void process_regel_should_return_error_result_due_to_retries_exhausted(String persnr, String expectedMsgRegex)
+   {
+      var request = newRegelMaskinellRequest(persnr);
+
+      var result = rtfService.processRegel(request);
+
+      // Verify result type
+      assertInstanceOf(RegelMaskinellErrorResult.class, result);
+
+      // Verify error
+      var errorResult = (RegelMaskinellErrorResult) result;
+      var regelErrorInformation = errorResult.regelErrorInformation();
+
+      assertNotNull(regelErrorInformation);
+      assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
+      assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
    }
 }

@@ -13,7 +13,10 @@ import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.adapter.arbetsgivare.ArbetsgivareAdapter;
 import se.fk.rimfrost.adapter.arbetsgivare.dto.ArbetsgivareResponse;
 import se.fk.rimfrost.adapter.arbetsgivare.dto.ImmutableArbetsgivareRequest;
+import se.fk.rimfrost.adapter.arbetsgivare.exception.ArbetsgivareErrorCode;
+import se.fk.rimfrost.adapter.arbetsgivare.exception.ArbetsgivareException;
 import se.fk.rimfrost.adapter.folkbokford.FolkbokfordAdapter;
+import se.fk.rimfrost.adapter.folkbokford.FolkbokfordException;
 import se.fk.rimfrost.adapter.folkbokford.dto.FolkbokfordResponse;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordRequest;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
@@ -178,9 +181,16 @@ public class RtfService implements RegelMaskinellServiceInterface
          var folkbokfordRequest = ImmutableFolkbokfordRequest.builder().personnummer(personnummer).build();
          return Result.of(folkbokfordAdapter.getFolkbokfordInfo(folkbokfordRequest));
       }
-      catch (WebApplicationException e)
+      catch (FolkbokfordException e)
       {
-         return Result.empty();
+         if (e.getErrorType() == FolkbokfordException.ErrorType.NOT_FOUND)
+         {
+            return Result.of(null);
+         }
+         else
+         {
+            return Result.empty();
+         }
       }
    }
 
@@ -191,9 +201,16 @@ public class RtfService implements RegelMaskinellServiceInterface
          var arbetsgivareRequest = ImmutableArbetsgivareRequest.builder().personnummer(personnummer).build();
          return Result.of(arbetsgivareAdapter.getArbetsgivareInfo(arbetsgivareRequest));
       }
-      catch (WebApplicationException e)
+      catch (ArbetsgivareException e)
       {
-         return Result.empty();
+         if (e.getErrorCode() == ArbetsgivareErrorCode.NOT_FOUND)
+         {
+            return Result.of(null);
+         }
+         else
+         {
+            return Result.empty();
+         }
       }
    }
 
