@@ -6,17 +6,28 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
+import se.fk.rimfrost.adapter.arbetsgivare.dto.ArbetsgivareResponse;
+import se.fk.rimfrost.adapter.arbetsgivare.dto.ImmutableArbetsgivareResponse;
+import se.fk.rimfrost.adapter.folkbokford.dto.FolkbokfordResponse;
+import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordResponse;
 import se.fk.rimfrost.framework.regel.RegelFelkod;
 import se.fk.rimfrost.framework.regel.Utfall;
+import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.maskinell.base.AbstractRegelMaskinellTest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellErrorResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellSuccessResult;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
 
 @QuarkusTest
@@ -175,5 +186,91 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
       assertNotNull(regelErrorInformation);
       assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
       assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "19990101-1234, (?i)^Failed to create underlag from folkbokforing response\\..*"
+   })
+   void process_regel_should_return_error_result_due_to_folkbokford_underlag_creation_failure(String persnr,
+         String expectedMsgRegex)
+   {
+      var request = newRegelMaskinellRequest(persnr);
+
+      try (MockedStatic<RegelUtils> ctx = mockStatic(RegelUtils.class))
+      {
+         ctx.when(() -> RegelUtils.createUnderlag(Mockito.any(), Mockito.anyInt(), eq(createFolkbokfordResponse(persnr)),
+               Mockito.any())).thenThrow(new InternalError());
+         var result = rtfService.processRegel(request);
+
+         // Verify result type
+         assertInstanceOf(RegelMaskinellErrorResult.class, result);
+
+         // Verify error
+         var errorResult = (RegelMaskinellErrorResult) result;
+         var regelErrorInformation = errorResult.regelErrorInformation();
+
+         assertNotNull(regelErrorInformation);
+         assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
+         assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
+      }
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "19990101-1234, (?i)^Failed to create underlag from arbetsgivare response\\..*"
+   })
+   void process_regel_should_return_error_result_due_to_arbetsgivare_underlag_creation_failure(String persnr,
+         String expectedMsgRegex)
+   {
+      var request = newRegelMaskinellRequest(persnr);
+
+      try (MockedStatic<RegelUtils> ctx = mockStatic(RegelUtils.class))
+      {
+         ctx.when(() -> RegelUtils.createUnderlag(Mockito.any(), Mockito.anyInt(), eq(createFolkbokfordResponse(persnr)),
+               Mockito.any())).thenReturn(null);
+         ctx.when(
+               () -> RegelUtils.createUnderlag(Mockito.any(), Mockito.anyInt(), eq(createArbetsgivareResponse()), Mockito.any()))
+               .thenThrow(new InternalError());
+         var result = rtfService.processRegel(request);
+
+         // Verify result type
+         assertInstanceOf(RegelMaskinellErrorResult.class, result);
+
+         // Verify error
+         var errorResult = (RegelMaskinellErrorResult) result;
+         var regelErrorInformation = errorResult.regelErrorInformation();
+
+         assertNotNull(regelErrorInformation);
+         assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
+         assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
+      }
+   }
+
+   private static FolkbokfordResponse createFolkbokfordResponse(String persnr)
+   {
+      return ImmutableFolkbokfordResponse.builder()
+            .id(persnr)
+            .fornamn("Lisa")
+            .efternamn("Tass")
+            .kon(FolkbokfordResponse.Kon.KVINNA)
+            .utdelningsadress("Storgatan 75")
+            .postnummer("12345")
+            .postort("Orsa")
+            .careOf("-")
+            .build();
+   }
+
+   private static ArbetsgivareResponse createArbetsgivareResponse()
+   {
+      return ImmutableArbetsgivareResponse.builder()
+            .organisationsnummer("987654-3210")
+            .organisationsnamn("Demo AB")
+            .arbetstidProcent(100)
+            .anstallningsdag(LocalDate.parse("2021-07-01"))
+            .sistaAnstallningsdag(null)
+            .build();
    }
 }
