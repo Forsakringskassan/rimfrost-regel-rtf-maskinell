@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.ws.rs.WebApplicationException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,8 +107,41 @@ public class RtfService implements RegelMaskinellServiceInterface
                   .build();
          }
 
-         var folkbokfordUnderlag = RegelUtils.createUnderlag("Folkbokförd", 1, folkbokfordResponse, objectMapper);
-         var arbetsgivareUnderlag = RegelUtils.createUnderlag("Arbetsgivare", 1, arbetsgivareResponse, objectMapper);
+         Underlag folkbokfordUnderlag = null;
+         try
+         {
+            folkbokfordUnderlag = RegelUtils.createUnderlag("Folkbokförd", 1, folkbokfordResponse, objectMapper);
+         }
+         catch (InternalError e)
+         {
+            LOGGER.error("Failed to create underlag from folkbokforing response", e);
+
+            return ImmutableRegelMaskinellErrorResult.builder()
+                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
+                        "Failed to create underlag from folkbokforing response. Handlaggning id: "
+                              + regelRequest.handlaggning().id()
+                              + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
+                              + regelRequest.uppgift().aktivitetId()))
+                  .build();
+         }
+
+         Underlag arbetsgivareUnderlag = null;
+         try
+         {
+            arbetsgivareUnderlag = RegelUtils.createUnderlag("Arbetsgivare", 1, arbetsgivareResponse, objectMapper);
+         }
+         catch (InternalError e)
+         {
+            LOGGER.error("Failed to create underlag from arbetsgivare response", e);
+
+            return ImmutableRegelMaskinellErrorResult.builder()
+                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
+                        "Failed to create underlag from arbetsgivare response. Handlaggning id: "
+                              + regelRequest.handlaggning().id()
+                              + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
+                              + regelRequest.uppgift().aktivitetId()))
+                  .build();
+         }
 
          underlag.add(folkbokfordUnderlag);
          underlag.add(arbetsgivareUnderlag);
