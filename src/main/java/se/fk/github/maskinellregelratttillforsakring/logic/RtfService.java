@@ -22,7 +22,6 @@ import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
 import se.fk.rimfrost.framework.handlaggning.model.Underlag;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
-import se.fk.rimfrost.framework.regel.RegelFelkod;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
@@ -83,7 +82,7 @@ public class RtfService implements RegelMaskinellServiceInterface
             LOGGER.error("Failed to read folkbokford response", e);
 
             return ImmutableRegelMaskinellErrorResult.builder()
-                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
+                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.RTF_MASKINELL_FOLKBOKFORING_READ_ERROR,
                         "Failed to read folkbokford response. Handlaggning id: " + regelRequest.handlaggning().id()
                               + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
                               + regelRequest.uppgift().aktivitetId()))
@@ -100,7 +99,7 @@ public class RtfService implements RegelMaskinellServiceInterface
             LOGGER.error("Failed to read arbetsgivare response", e);
 
             return ImmutableRegelMaskinellErrorResult.builder()
-                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
+                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.RTF_MASKINELL_ARBETSGIVARE_READ_ERROR,
                         "Failed to read arbetsgivare response. Handlaggning id: " + regelRequest.handlaggning().id()
                               + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
                               + regelRequest.uppgift().aktivitetId()))
@@ -117,11 +116,12 @@ public class RtfService implements RegelMaskinellServiceInterface
             LOGGER.error("Failed to create underlag from folkbokforing response", e);
 
             return ImmutableRegelMaskinellErrorResult.builder()
-                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
-                        "Failed to create underlag from folkbokforing response. Handlaggning id: "
-                              + regelRequest.handlaggning().id()
-                              + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
-                              + regelRequest.uppgift().aktivitetId()))
+                  .regelErrorInformation(
+                        createRegelErrorInformation(RegelFelkod.RTF_MASKINELL_FOLKBOKFORING_UNDERLAG_CREATION_FAILURE,
+                              "Failed to create underlag from folkbokforing response. Handlaggning id: "
+                                    + regelRequest.handlaggning().id()
+                                    + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
+                                    + regelRequest.uppgift().aktivitetId()))
                   .build();
          }
 
@@ -135,11 +135,12 @@ public class RtfService implements RegelMaskinellServiceInterface
             LOGGER.error("Failed to create underlag from arbetsgivare response", e);
 
             return ImmutableRegelMaskinellErrorResult.builder()
-                  .regelErrorInformation(createRegelErrorInformation(RegelFelkod.OTHER,
-                        "Failed to create underlag from arbetsgivare response. Handlaggning id: "
-                              + regelRequest.handlaggning().id()
-                              + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
-                              + regelRequest.uppgift().aktivitetId()))
+                  .regelErrorInformation(
+                        createRegelErrorInformation(RegelFelkod.RTF_MASKINELL_ARBETSGIVARE_UNDERLAG_CREATION_FAILURE,
+                              "Failed to create underlag from arbetsgivare response. Handlaggning id: "
+                                    + regelRequest.handlaggning().id()
+                                    + ", process instans id: " + regelRequest.processInstansId() + ", aktivitet id: "
+                                    + regelRequest.uppgift().aktivitetId()))
                   .build();
          }
 
@@ -246,7 +247,7 @@ public class RtfService implements RegelMaskinellServiceInterface
       }
    }
 
-   private RegelErrorInformation createRegelErrorInformation(RegelFelkod felkod, String meddelande)
+   private RegelErrorInformation createRegelErrorInformation(String felkod, String meddelande)
    {
       RegelErrorInformation regelErrorInformation = new RegelErrorInformation();
       regelErrorInformation.setFelkod(felkod);
