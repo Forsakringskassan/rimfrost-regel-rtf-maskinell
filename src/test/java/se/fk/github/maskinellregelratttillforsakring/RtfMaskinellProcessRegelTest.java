@@ -8,12 +8,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import se.fk.github.maskinellregelratttillforsakring.logic.RegelFelkod;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfService;
 import se.fk.rimfrost.adapter.arbetsgivare.dto.ArbetsgivareResponse;
 import se.fk.rimfrost.adapter.arbetsgivare.dto.ImmutableArbetsgivareResponse;
 import se.fk.rimfrost.adapter.folkbokford.dto.FolkbokfordResponse;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordResponse;
-import se.fk.rimfrost.framework.regel.RegelFelkod;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.maskinell.base.AbstractRegelMaskinellTest;
@@ -167,10 +167,11 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
    @ParameterizedTest
    @CsvSource(
    {
-         "19990102-9999, (?i)^Failed to read arbetsgivare response\\..*",
-         "19990103-9999, (?i)^Failed to read folkbokford response\\..*"
+         "19990102-9999, (?i)^Failed to read arbetsgivare response\\..*, RTF_MASKINELL_ARBETSGIVARE_READ_ERROR",
+         "19990103-9999, (?i)^Failed to read folkbokford response\\..*, RTF_MASKINELL_FOLKBOKFORING_READ_ERROR"
    })
-   void process_regel_should_return_error_result_due_to_retries_exhausted(String persnr, String expectedMsgRegex)
+   void process_regel_should_return_error_result_due_to_retries_exhausted(String persnr, String expectedMsgRegex,
+         String expectedErrorCode)
    {
       var request = newRegelMaskinellRequest(persnr);
 
@@ -184,7 +185,7 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
       var regelErrorInformation = errorResult.regelErrorInformation();
 
       assertNotNull(regelErrorInformation);
-      assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
+      assertEquals(expectedErrorCode, regelErrorInformation.getFelkod());
       assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
    }
 
@@ -212,7 +213,7 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
          var regelErrorInformation = errorResult.regelErrorInformation();
 
          assertNotNull(regelErrorInformation);
-         assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
+         assertEquals(RegelFelkod.RTF_MASKINELL_FOLKBOKFORING_UNDERLAG_CREATION_FAILURE, regelErrorInformation.getFelkod());
          assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
       }
    }
@@ -244,7 +245,7 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
          var regelErrorInformation = errorResult.regelErrorInformation();
 
          assertNotNull(regelErrorInformation);
-         assertEquals(RegelFelkod.OTHER, regelErrorInformation.getFelkod());
+         assertEquals(RegelFelkod.RTF_MASKINELL_ARBETSGIVARE_UNDERLAG_CREATION_FAILURE, regelErrorInformation.getFelkod());
          assertTrue(regelErrorInformation.getFelmeddelande().matches(expectedMsgRegex));
       }
    }
