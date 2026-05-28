@@ -2,6 +2,15 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.0.1 (2026-05-12)
+
+### Bug Fixes
+
+-  Add rule specific error codes ([88fc4](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/88fc4685fc9cc08) Lars Persson)  
+-  Add try-catch handling with logging for underlag creation ([f1403](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/f14030d400ad4a2) Lars Persson)  
+-  Handle exceptions from external dependencies ([0c178](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/0c178c639279100) Lars Persson)  
+-  Retry GET-operations ([1bb2b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1bb2b7db7539e89) Lars Persson)  
+
 ## 1.0.0 (2026-04-29)
 
 ### Breaking changes
