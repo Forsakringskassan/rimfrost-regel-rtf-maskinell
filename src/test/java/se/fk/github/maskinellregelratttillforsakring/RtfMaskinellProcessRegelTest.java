@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
@@ -126,7 +127,7 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
    {
          "19990101-1234"
    })
-   void process_regel_should_set_uppgift_uppgiftStatus_and_utfordTs_fields(String persnr)
+   void process_regel_should_set_uppgift_utfordTs_field(String persnr)
    {
       var request = newRegelMaskinellRequest(persnr);
 
@@ -136,8 +137,25 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
       assertInstanceOf(RegelMaskinellSuccessResult.class, result);
 
       var successResult = (RegelMaskinellSuccessResult) result;
-      assertEquals("3", successResult.handlaggningUpdate().uppgift().uppgiftStatus());
       assertNotNull(successResult.handlaggningUpdate().uppgift().utfordTs());
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "19990101-1234"
+   })
+   void process_regel_should_not_set_uppgift_uppgiftStatus_field(String persnr)
+   {
+      var request = newRegelMaskinellRequest(persnr);
+
+      var result = rtfService.processRegel(request);
+
+      // Verify result type
+      assertInstanceOf(RegelMaskinellSuccessResult.class, result);
+
+      var successResult = (RegelMaskinellSuccessResult) result;
+      assertNull(successResult.handlaggningUpdate().uppgift().uppgiftStatus());
    }
 
    @ParameterizedTest
