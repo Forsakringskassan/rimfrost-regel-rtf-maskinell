@@ -32,7 +32,6 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
-import se.fk.rimfrost.framework.uppgiftstatusprovider.UppgiftStatusProvider;
 
 @ApplicationScoped
 public class RtfService implements RegelMaskinellServiceInterface
@@ -48,9 +47,6 @@ public class RtfService implements RegelMaskinellServiceInterface
 
    @Inject
    ArbetsgivareAdapter arbetsgivareAdapter;
-
-   @Inject
-   UppgiftStatusProvider uppgiftStatusProvider;
 
    @Inject
    DmnService dmnService;
@@ -160,7 +156,6 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       var uppgift = ImmutableUppgift.builder().from(regelRequest.uppgift())
             .utfordTs(OffsetDateTime.now())
-            .uppgiftStatus(uppgiftStatusProvider.getAvslutadId())
             .build();
 
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()

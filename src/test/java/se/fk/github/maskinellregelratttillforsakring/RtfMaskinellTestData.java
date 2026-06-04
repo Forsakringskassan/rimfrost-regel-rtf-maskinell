@@ -58,7 +58,7 @@ public class RtfMaskinellTestData
             .version(1)
             .skapadTs(OffsetDateTime.now())
             .utforarId(utforare)
-            .uppgiftStatus("2") // TILLDELAD
+            .uppgiftStatus(null)
             .aktivitetId(UUID.randomUUID())
             .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace when correct value is available
             .uppgiftSpecifikation(uppgiftSpecifikation)
