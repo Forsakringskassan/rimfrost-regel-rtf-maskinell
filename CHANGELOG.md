@@ -2,7 +2,13 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
-## 1.0.2 (2026-06-04)
+## 1.1.1 (2026-06-11)
+
+### Bug Fixes
+
+-  bump versions (#90) ([6a9aa](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/6a9aa1e77cc00d9) NilsElveros)  
+
+## rimfrost-1.1 (2026-06-04)
 
 ### Bug Fixes
 
