@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.1.2 (2026-06-15)
+
+### Bug Fixes
+
+-  Bump rimfrost-framework-regel-maskinell version ([817c7](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/817c74dfaacab69) Lars Persson)  
+-  document unused fields in config.yaml with explanatory comments ([56e53](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/56e536abc6a8624) Ulf Slunga)  
+
+### Dependency updates
+
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.1.2 (#91) ([cade6](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/cade6a7bbde14ff) renovate[bot])  
 ## 1.1.1 (2026-06-11)
 
 ### Bug Fixes
