@@ -2,6 +2,18 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.1.3 (2026-06-26)
+
+### Bug Fixes
+
+-  add config.yaml validation to CI and bump rimfrost-framework-regel to 1.2.3 ([baa9c](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/baa9cfad9dde1f2) Ulf Slunga)  
+-  **deps**  update dependency se.fk.rimfrost.adapter.folkbokford:rimfrost-adapter-folkbokford to v1.1.3 ([35f91](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/35f9117b9ddac07) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.adapter.arbetsgivare:rimfrost-adapter-arbetsgivare to v1.1.3 ([1da54](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1da548342bd85a9) renovate[bot])  
+
+### Dependency updates
+
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.2.1 ([306df](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/306dfcbdac79f45) renovate[bot])  
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.1.4 ([bab9d](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/bab9d969e5b0089) renovate[bot])  
 ## 1.1.2 (2026-06-15)
 
 ### Bug Fixes
