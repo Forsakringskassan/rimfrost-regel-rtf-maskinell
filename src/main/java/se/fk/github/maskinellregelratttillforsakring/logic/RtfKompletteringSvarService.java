@@ -3,7 +3,6 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.UUID;
-import se.fk.github.maskinellregelratttillforsakring.presentation.rest.RtfKompletteringSvar;
 import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.HandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
@@ -12,6 +11,7 @@ import se.fk.rimfrost.framework.handlaggning.model.ImmutableIndividYrkandeRoll;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableYrkande;
 import se.fk.rimfrost.framework.handlaggning.model.IndividYrkandeRoll;
 import se.fk.rimfrost.framework.regel.logic.KompletteringSvarServiceInterface;
+import se.fk.rimfrost.regel.rtf.maskinell.jaxrsspec.controllers.generatedsource.model.RtfKompletteringSvar;
 
 @ApplicationScoped
 public class RtfKompletteringSvarService implements KompletteringSvarServiceInterface<String, RtfKompletteringSvar>
@@ -29,7 +29,7 @@ public class RtfKompletteringSvarService implements KompletteringSvarServiceInte
    {
       var individYrkandeRoller = new ArrayList<IndividYrkandeRoll>(handlaggning.yrkande().individYrkandeRoller());
 
-      for (var personnummer : svar.personnummer())
+      for (var personnummer : svar.getPersonnummer())
       {
          individYrkandeRoller.add(nyIndividYrkandeRoll(personnummer));
       }

@@ -3,9 +3,9 @@ package se.fk.github.maskinellregelratttillforsakring;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.fk.github.maskinellregelratttillforsakring.logic.RtfKompletteringSvarService;
-import se.fk.github.maskinellregelratttillforsakring.presentation.rest.RtfKompletteringSvar;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableYrkande;
+import se.fk.rimfrost.regel.rtf.maskinell.jaxrsspec.controllers.generatedsource.model.RtfKompletteringSvar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.fk.github.maskinellregelratttillforsakring.RtfMaskinellTestData.newRegelMaskinellRequest;
