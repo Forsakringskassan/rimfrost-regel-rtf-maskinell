@@ -1,0 +1,65 @@
+package se.fk.github.maskinellregelratttillforsakring.logic;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
+import java.util.UUID;
+import se.fk.github.maskinellregelratttillforsakring.presentation.rest.RtfKompletteringSvar;
+import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
+import se.fk.rimfrost.framework.handlaggning.model.HandlaggningUpdate;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableIdtyp;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableIndividYrkandeRoll;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableYrkande;
+import se.fk.rimfrost.framework.handlaggning.model.IndividYrkandeRoll;
+import se.fk.rimfrost.framework.regel.logic.KompletteringSvarServiceInterface;
+
+@ApplicationScoped
+public class RtfKompletteringSvarService implements KompletteringSvarServiceInterface<String, RtfKompletteringSvar>
+{
+   private static final String PERSONNUMMER_TYP_ID = "PERSONNUMMER";
+
+   @Override
+   public String readSvarData(Handlaggning handlaggning)
+   {
+      return "Yrkandet saknar individer att pröva rätt till försäkring för";
+   }
+
+   @Override
+   public HandlaggningUpdate registerSvar(Handlaggning handlaggning, RtfKompletteringSvar svar)
+   {
+      var individYrkandeRoller = new ArrayList<IndividYrkandeRoll>(handlaggning.yrkande().individYrkandeRoller());
+
+      for (var personnummer : svar.personnummer())
+      {
+         individYrkandeRoller.add(nyIndividYrkandeRoll(personnummer));
+      }
+
+      var uppdateratYrkande = ImmutableYrkande.builder()
+            .from(handlaggning.yrkande())
+            .individYrkandeRoller(individYrkandeRoller)
+            .build();
+
+      return ImmutableHandlaggningUpdate.builder()
+            .id(handlaggning.id())
+            .version(handlaggning.version())
+            .yrkande(uppdateratYrkande)
+            .processInstansId(handlaggning.processInstansId())
+            .skapadTS(handlaggning.skapadTS())
+            .avslutadTS(handlaggning.avslutadTS())
+            .handlaggningspecifikationId(handlaggning.handlaggningspecifikationId())
+            .build();
+   }
+
+   private IndividYrkandeRoll nyIndividYrkandeRoll(String personnummer)
+   {
+      var individ = ImmutableIdtyp.builder()
+            .typId(PERSONNUMMER_TYP_ID)
+            .varde(personnummer)
+            .build();
+
+      return ImmutableIndividYrkandeRoll.builder()
+            .individ(individ)
+            .yrkandeRollId(UUID.randomUUID().toString())
+            .build();
+   }
+}
