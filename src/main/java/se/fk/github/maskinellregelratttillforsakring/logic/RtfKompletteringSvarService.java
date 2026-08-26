@@ -31,7 +31,7 @@ public class RtfKompletteringSvarService implements KompletteringSvarServiceInte
 
       for (var personnummer : svar.getPersonnummer())
       {
-         individYrkandeRoller.add(nyIndividYrkandeRoll(personnummer));
+         individYrkandeRoller.add(createIndividYrkandeRoll(personnummer));
       }
 
       var uppdateratYrkande = ImmutableYrkande.builder()
@@ -50,7 +50,7 @@ public class RtfKompletteringSvarService implements KompletteringSvarServiceInte
             .build();
    }
 
-   private IndividYrkandeRoll nyIndividYrkandeRoll(String personnummer)
+   private IndividYrkandeRoll createIndividYrkandeRoll(String personnummer)
    {
       var individ = ImmutableIdtyp.builder()
             .typId(PERSONNUMMER_TYP_ID)
