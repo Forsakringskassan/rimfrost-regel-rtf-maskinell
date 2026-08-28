@@ -2,6 +2,31 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.1.4 (2026-08-28)
+
+### Dependency updates
+
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.3.2 ([acb14](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/acb14507b9c62e2) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.3.1 ([87128](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/87128f0b72177b9) renovate[bot])  
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.3.1 ([3f6fe](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/3f6fe33699970c2) renovate[bot])  
+- pin forsakringskassan/.github action to 3d07e55 ([e8eb3](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/e8eb32dacd77f37) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.2.4 ([10e4e](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/10e4e15252b11e9) renovate[bot])  
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.2.4 ([6179c](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/6179c8f832bb660) renovate[bot])  
+### Other changes
+
+**Fix/fkpoc 954 add komplettering (#96)**
+
+* fix: add komplettering 
+* fix: update to use openapi generated classes 
+* fix: renamed method 
+* fix: compile issue 
+* fix: update to new framework version 
+* fix: update framework-regel-maskinell 
+* fix: some cleanup 
+
+[284f7](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/284f7c172a140eb) NilsElveros *2026-08-28 11:56:43*
+
+
 ## 1.1.3 (2026-06-26)
 
 ### Bug Fixes
