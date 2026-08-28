@@ -2,7 +2,9 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.HandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
@@ -21,7 +23,17 @@ public class RtfKompletteringSvarService implements KompletteringSvarServiceInte
    @Override
    public RtfKompletteringSvar readSvarData(Handlaggning handlaggning)
    {
-      return new RtfKompletteringSvar();
+      var individYrkandeRoller = handlaggning.yrkande().individYrkandeRoller();
+      if (individYrkandeRoller.isEmpty())
+      {
+         return new RtfKompletteringSvar(new ArrayList<>());
+      }
+
+      var personnummer = individYrkandeRoller.stream()
+            .map(individYrkandeRoll -> individYrkandeRoll.individ().varde())
+            .collect(Collectors.toList());
+
+      return new RtfKompletteringSvar(personnummer);
    }
 
    @Override
