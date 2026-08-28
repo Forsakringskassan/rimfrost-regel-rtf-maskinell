@@ -11,6 +11,6 @@ import se.fk.rimfrost.regel.rtf.maskinell.jaxrsspec.controllers.generatedsource.
 @Consumes("application/json")
 @ApplicationScoped
 @Path("/regel/rtf-maskinell")
-public class RtfKompletteringController extends KompletteringController<String, RtfKompletteringSvar>
+public class RtfKompletteringController extends KompletteringController<RtfKompletteringSvar>
 {
 }

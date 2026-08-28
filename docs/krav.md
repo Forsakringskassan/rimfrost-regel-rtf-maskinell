@@ -86,7 +86,7 @@ Nedan beskrivs de tillstånd ett yrkande kan befinna sig i under den maskinella 
 ### NFR-03 — Datakvalitet vid komplettering
 
 - **NFR-03.1** Personnummer som registreras via komplettering-API:et bör valideras avseende format innan de sparas på yrkandet, så att felaktigt inmatade värden inte förs vidare till externa uppgiftskällor. *(Ej uppfyllt i nuvarande implementation — noterat som brist.)*
-- **NFR-03.2** Upprepad registrering av samma personnummer på ett yrkande bör inte skapa dubbletter av individer. *(Ej uppfyllt i nuvarande implementation — noterat som brist.)*
+- **NFR-03.2** Upprepad registrering av samma personnummer på ett yrkande ska inte skapa dubbletter av individer.
 
 ### NFR-04 — Konfigurerbarhet och drift
 

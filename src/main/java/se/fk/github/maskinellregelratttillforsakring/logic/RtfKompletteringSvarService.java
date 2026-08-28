@@ -2,7 +2,9 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.HandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
@@ -14,14 +16,26 @@ import se.fk.rimfrost.framework.regel.logic.KompletteringSvarServiceInterface;
 import se.fk.rimfrost.regel.rtf.maskinell.jaxrsspec.controllers.generatedsource.model.RtfKompletteringSvar;
 
 @ApplicationScoped
-public class RtfKompletteringSvarService implements KompletteringSvarServiceInterface<String, RtfKompletteringSvar>
+public class RtfKompletteringSvarService implements KompletteringSvarServiceInterface<RtfKompletteringSvar>
 {
-   private static final String PERSONNUMMER_TYP_ID = "PERSONNUMMER";
+   private static final String PERSONNUMMER_TYP_ID = "c5f2e2b4-9143-4160-8f4b-30c172f0ac05";
 
    @Override
-   public String readSvarData(Handlaggning handlaggning)
+   public RtfKompletteringSvar readSvarData(Handlaggning handlaggning)
    {
-      return "Yrkandet saknar individer att pröva rätt till försäkring för";
+      var individYrkandeRoller = handlaggning.yrkande().individYrkandeRoller();
+
+      if (individYrkandeRoller.isEmpty())
+      {
+         return new RtfKompletteringSvar(new ArrayList<>());
+      }
+
+      var personnummer = individYrkandeRoller.stream()
+            .filter(individYrkandeRoll -> PERSONNUMMER_TYP_ID.equals(individYrkandeRoll.individ().typId()))
+            .map(individYrkandeRoll -> individYrkandeRoll.individ().varde())
+            .collect(Collectors.toList());
+
+      return new RtfKompletteringSvar(personnummer);
    }
 
    @Override
@@ -29,9 +43,17 @@ public class RtfKompletteringSvarService implements KompletteringSvarServiceInte
    {
       var individYrkandeRoller = new ArrayList<IndividYrkandeRoll>(handlaggning.yrkande().individYrkandeRoller());
 
+      var befintligaPersonnummer = individYrkandeRoller.stream()
+            .filter(individYrkandeRoll -> PERSONNUMMER_TYP_ID.equals(individYrkandeRoll.individ().typId()))
+            .map(individYrkandeRoll -> individYrkandeRoll.individ().varde())
+            .collect(Collectors.toCollection(HashSet::new));
+
       for (var personnummer : svar.getPersonnummer())
       {
-         individYrkandeRoller.add(createIndividYrkandeRoll(personnummer));
+         if (befintligaPersonnummer.add(personnummer))
+         {
+            individYrkandeRoller.add(createIndividYrkandeRoll(personnummer));
+         }
       }
 
       var uppdateratYrkande = ImmutableYrkande.builder()

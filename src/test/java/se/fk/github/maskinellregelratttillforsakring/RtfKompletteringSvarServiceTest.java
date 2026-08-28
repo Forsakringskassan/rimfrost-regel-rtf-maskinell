@@ -16,7 +16,7 @@ class RtfKompletteringSvarServiceTest
    private final RtfKompletteringSvarService svarService = new RtfKompletteringSvarService();
 
    @Test
-   void should_return_message_about_saknade_individer()
+   void should_return_empty_personnummer_list_when_no_individer()
    {
       var handlaggningUtanIndivider = ImmutableHandlaggning.builder()
             .from(newRegelMaskinellRequest("19990101-1234").handlaggning())
@@ -28,7 +28,17 @@ class RtfKompletteringSvarServiceTest
 
       var svarData = svarService.readSvarData(handlaggningUtanIndivider);
 
-      assertEquals("Yrkandet saknar individer att pröva rätt till försäkring för", svarData);
+      assertEquals(List.of(), svarData.getPersonnummer());
+   }
+
+   @Test
+   void should_return_personnummer_for_each_individ()
+   {
+      var handlaggning = newRegelMaskinellRequest("19990101-1234").handlaggning();
+
+      var svarData = svarService.readSvarData(handlaggning);
+
+      assertEquals(List.of("19990101-1234"), svarData.getPersonnummer());
    }
 
    @Test
@@ -50,7 +60,7 @@ class RtfKompletteringSvarServiceTest
       assertEquals(2, individYrkandeRoller.size());
       assertEquals("19990101-1234", individYrkandeRoller.get(0).individ().varde());
       assertEquals("19990101-3333", individYrkandeRoller.get(1).individ().varde());
-      assertEquals("PERSONNUMMER", individYrkandeRoller.get(0).individ().typId());
+      assertEquals("c5f2e2b4-9143-4160-8f4b-30c172f0ac05", individYrkandeRoller.get(0).individ().typId());
    }
 
    @Test
@@ -60,6 +70,19 @@ class RtfKompletteringSvarServiceTest
       var befintligtAntal = handlaggning.yrkande().individYrkandeRoller().size();
 
       var svar = new RtfKompletteringSvar(List.of("19990101-3333"));
+
+      var update = svarService.registerSvar(handlaggning, svar);
+
+      assertEquals(befintligtAntal + 1, update.yrkande().individYrkandeRoller().size());
+   }
+
+   @Test
+   void should_not_add_duplicate_individ_for_already_registered_personnummer()
+   {
+      var handlaggning = newRegelMaskinellRequest("19990101-1234").handlaggning();
+      var befintligtAntal = handlaggning.yrkande().individYrkandeRoller().size();
+
+      var svar = new RtfKompletteringSvar(List.of("19990101-1234", "19990101-3333"));
 
       var update = svarService.registerSvar(handlaggning, svar);
 
