@@ -13,7 +13,7 @@ public class RtfMaskinellTestData
    {
 
       var idTyp = ImmutableIdtyp.builder()
-            .typId(UUID.randomUUID().toString())
+            .typId("c5f2e2b4-9143-4160-8f4b-30c172f0ac05")
             .varde(persnr)
             .build();
 
