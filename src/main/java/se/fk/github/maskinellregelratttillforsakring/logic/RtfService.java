@@ -181,22 +181,22 @@ public class RtfService implements RegelMaskinellServiceInterface, Komplettering
             .handlaggningUpdate(handlaggningUpdate)
             .build();
    }
-   
+
    @Override
-    public List<KompletteringUnderlag> checkKomplettering(Handlaggning handlaggning)
-    {
-        var individYrkandeRoller = handlaggning.yrkande().individYrkandeRoller();
+   public List<KompletteringUnderlag> checkKomplettering(Handlaggning handlaggning)
+   {
+      var individYrkandeRoller = handlaggning.yrkande().individYrkandeRoller();
 
-        if (individYrkandeRoller.isEmpty())
-        {
-            return List.of(ImmutableKompletteringUnderlag.builder()
-                .underlagTyp("Individ")
-                .beskrivning("Yrkandet saknar individer att pröva rätt till försäkring för")
-                .build());
-        }
+      if (individYrkandeRoller.isEmpty())
+      {
+         return List.of(ImmutableKompletteringUnderlag.builder()
+               .underlagTyp("Individ")
+               .beskrivning("Yrkandet saknar individer att pröva rätt till försäkring för")
+               .build());
+      }
 
-        return List.of();
-    }
+      return List.of();
+   }
 
    private Utfall evaluteDmn(boolean folkbokford, boolean harAnstallning)
    {
