@@ -2,7 +2,6 @@ package se.fk.github.maskinellregelratttillforsakring.logic;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
@@ -30,6 +29,7 @@ public class RtfKompletteringSvarService implements KompletteringSvarServiceInte
       }
 
       var personnummer = individYrkandeRoller.stream()
+            .filter(individYrkandeRoll -> PERSONNUMMER_TYP_ID.equals(individYrkandeRoll.individ().typId()))
             .map(individYrkandeRoll -> individYrkandeRoll.individ().varde())
             .collect(Collectors.toList());
 

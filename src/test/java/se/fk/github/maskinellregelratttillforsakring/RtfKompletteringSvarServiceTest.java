@@ -28,7 +28,7 @@ class RtfKompletteringSvarServiceTest
 
       var svarData = svarService.readSvarData(handlaggningUtanIndivider);
 
-      assertEquals(new RtfKompletteringSvar(), svarData);
+      assertEquals(new RtfKompletteringSvar(List.of()), svarData);
    }
 
    @Test
