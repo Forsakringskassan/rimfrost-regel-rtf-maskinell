@@ -2,6 +2,20 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.1.5 (2026-09-03)
+
+### Bug Fixes
+
+-  Bump rimfrost-framework-regel-maskinell version ([c1ef3](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/c1ef3c2c09d3ddd) Lars Persson)  
+-  Revert "Fix/fkpoc 954 add komplettering (#96)" ([3e3ff](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/3e3ff22ad18be20) Lars Persson)  
+-  **deps**  update dependency org.yaml:snakeyaml to v2.7 ([beeba](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/beeba410577664d) renovate[bot])  
+
+### Dependency updates
+
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.4.1 ([8d8c6](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/8d8c6fcf4d34840) renovate[bot])  
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.4.0 ([6f92b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/6f92b54e86ff155) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.3.2 ([afd00](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/afd00675710e1f3) renovate[bot])  
+- update forsakringskassan/.github digest to d1349e6 ([11ac7](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/11ac78fe3e78fb7) renovate[bot])  
 ## 1.1.4 (2026-08-28)
 
 ### Dependency updates
