@@ -18,16 +18,12 @@ import se.fk.rimfrost.adapter.folkbokford.FolkbokfordAdapter;
 import se.fk.rimfrost.adapter.folkbokford.FolkbokfordException;
 import se.fk.rimfrost.adapter.folkbokford.dto.FolkbokfordResponse;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordRequest;
-import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
 import se.fk.rimfrost.framework.handlaggning.model.Underlag;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.Utfall;
-import se.fk.rimfrost.framework.regel.logic.KompletteringKontrollInterface;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
-import se.fk.rimfrost.framework.regel.logic.dto.ImmutableKompletteringUnderlag;
-import se.fk.rimfrost.framework.regel.logic.dto.KompletteringUnderlag;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellErrorResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellSuccessResult;
@@ -38,7 +34,7 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhau
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 
 @ApplicationScoped
-public class RtfService implements RegelMaskinellServiceInterface, KompletteringKontrollInterface
+public class RtfService implements RegelMaskinellServiceInterface
 {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(RtfService.class);
@@ -180,22 +176,6 @@ public class RtfService implements RegelMaskinellServiceInterface, Komplettering
             .utfall(utfall)
             .handlaggningUpdate(handlaggningUpdate)
             .build();
-   }
-
-   @Override
-   public List<KompletteringUnderlag> checkKomplettering(Handlaggning handlaggning)
-   {
-      var individYrkandeRoller = handlaggning.yrkande().individYrkandeRoller();
-
-      if (individYrkandeRoller.isEmpty())
-      {
-         return List.of(ImmutableKompletteringUnderlag.builder()
-               .underlagTyp("Individ")
-               .beskrivning("Yrkandet saknar individer att pröva rätt till försäkring för")
-               .build());
-      }
-
-      return List.of();
    }
 
    private Utfall evaluteDmn(boolean folkbokford, boolean harAnstallning)
