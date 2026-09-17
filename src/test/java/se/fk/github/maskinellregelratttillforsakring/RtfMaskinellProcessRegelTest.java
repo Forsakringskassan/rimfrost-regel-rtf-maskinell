@@ -161,6 +161,24 @@ public class RtfMaskinellProcessRegelTest extends AbstractRegelMaskinellTest
    @ParameterizedTest
    @CsvSource(
    {
+         "19990101-1234"
+   })
+   void process_regel_should_increment_handlaggning_version(String persnr)
+   {
+      var request = newRegelMaskinellRequest(persnr);
+
+      var result = rtfService.processRegel(request);
+
+      // Verify result type
+      assertInstanceOf(RegelMaskinellSuccessResult.class, result);
+
+      var successResult = (RegelMaskinellSuccessResult) result;
+      assertEquals(request.handlaggning().version() + 1, successResult.handlaggningUpdate().version());
+   }
+
+   @ParameterizedTest
+   @CsvSource(
+   {
          "19990101-1234, Ja",
          "19990101-3333, Utredning",
          "19990101-2222, Ja",
