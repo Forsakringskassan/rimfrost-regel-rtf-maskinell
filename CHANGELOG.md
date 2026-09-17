@@ -2,6 +2,19 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.1.6 (2026-09-17)
+
+### Bug Fixes
+
+-  Increment handlaggning version for handlaggning update ([6d112](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/6d112683415b657) Lars Persson)  
+-  Bump rimfrost-framework-regel-maskinell version ([16f74](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/16f74714fde6dda) Lars Persson)  
+
+### Dependency updates
+
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.4.3 ([ad6c2](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/ad6c2db46eb6d23) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.4.2 ([f679b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/f679b55dc4ab922) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.4.1 ([c0885](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/c0885a56e7cd86f) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.4.0 ([4a0c6](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/4a0c679ba081111) renovate[bot])  
 ## 1.1.5 (2026-09-03)
 
 ### Bug Fixes
