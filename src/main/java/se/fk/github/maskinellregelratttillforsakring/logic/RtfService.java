@@ -19,8 +19,10 @@ import se.fk.rimfrost.adapter.folkbokford.FolkbokfordException;
 import se.fk.rimfrost.adapter.folkbokford.dto.FolkbokfordResponse;
 import se.fk.rimfrost.adapter.folkbokford.dto.ImmutableFolkbokfordRequest;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableRegelutfall;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
-import se.fk.rimfrost.framework.handlaggning.model.Underlag;
+import se.fk.rimfrost.framework.handlaggning.model.Uppgiftsdata;
+import se.fk.rimfrost.framework.handlaggning.model.Uppgiftsdatakopia;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
@@ -62,11 +64,11 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       boolean folkbokford = false;
       boolean harAnstallning = false;
-      var underlag = new ArrayList<Underlag>();
+      var underlag = new ArrayList<Uppgiftsdata>();
 
-      for (var individYrkandeRoll : regelRequest.handlaggning().yrkande().individYrkandeRoller())
+      for (var rollIYrkande : regelRequest.handlaggning().yrkande().rollerIYrkande())
       {
-         var individ = individYrkandeRoll.individ();
+         var individ = rollIYrkande.individ();
 
          FolkbokfordResponse folkbokfordResponse = null;
          try
@@ -102,10 +104,10 @@ public class RtfService implements RegelMaskinellServiceInterface
                   .build();
          }
 
-         Underlag folkbokfordUnderlag = null;
+         Uppgiftsdatakopia folkbokfordUnderlag = null;
          try
          {
-            folkbokfordUnderlag = RegelUtils.createUnderlag("Folkbokförd", 1, folkbokfordResponse, objectMapper);
+            folkbokfordUnderlag = RegelUtils.createUppgiftsdatakopia("Folkbokförd", folkbokfordResponse, objectMapper);
          }
          catch (InternalError e)
          {
@@ -121,10 +123,10 @@ public class RtfService implements RegelMaskinellServiceInterface
                   .build();
          }
 
-         Underlag arbetsgivareUnderlag = null;
+         Uppgiftsdatakopia arbetsgivareUnderlag = null;
          try
          {
-            arbetsgivareUnderlag = RegelUtils.createUnderlag("Arbetsgivare", 1, arbetsgivareResponse, objectMapper);
+            arbetsgivareUnderlag = RegelUtils.createUppgiftsdatakopia("Arbetsgivare", arbetsgivareResponse, objectMapper);
          }
          catch (InternalError e)
          {
@@ -154,20 +156,15 @@ public class RtfService implements RegelMaskinellServiceInterface
 
       var utfall = evaluteDmn(folkbokford, harAnstallning);
 
-      var uppgift = ImmutableUppgift.builder().from(regelRequest.uppgift())
-            .utfordTs(OffsetDateTime.now())
+      var updatedUppgift = ImmutableUppgift.builder().from(regelRequest.uppgift())
+            .utfordTS(OffsetDateTime.now())
+            .underlag(underlag)
+            .regelutfall(ImmutableRegelutfall.builder().varde(utfall.getValue()).build())
             .build();
 
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
-            .id(regelRequest.handlaggning().id())
-            .version(regelRequest.handlaggning().version() + 1)
-            .yrkande(regelRequest.handlaggning().yrkande())
-            .processInstansId(regelRequest.processInstansId())
-            .skapadTS(regelRequest.handlaggning().skapadTS())
-            .avslutadTS(regelRequest.handlaggning().avslutadTS())
-            .handlaggningspecifikationId(regelRequest.handlaggning().handlaggningspecifikationId())
-            .underlag(underlag)
-            .uppgift(uppgift)
+            .handlaggning(regelRequest.handlaggning())
+            .uppgift(updatedUppgift)
             .build();
 
       LOGGER.info("Finished process regel for yrkande: {} with utfall: {}", regelRequest.handlaggning().yrkande().id(), utfall);
