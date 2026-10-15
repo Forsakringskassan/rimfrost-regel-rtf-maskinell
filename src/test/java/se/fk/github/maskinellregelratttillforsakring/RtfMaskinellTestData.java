@@ -17,15 +17,19 @@ public class RtfMaskinellTestData
             .varde(persnr)
             .build();
 
-      var individ = ImmutableIndividYrkandeRoll.builder()
+      var yrkandeId = UUID.randomUUID();
+
+      var rollIYrkande = ImmutableRollIYrkande.builder()
+            .id(UUID.randomUUID())
             .individ(idTyp)
-            .yrkandeRollId(UUID.randomUUID().toString())
+            .yrkandeRollId("SOKANDE")
+            .avserYrkande(yrkandeId)
             .build();
 
       var yrkande = ImmutableYrkande.builder()
-            .id(UUID.randomUUID())
-            .addIndividYrkandeRoller(individ)
-            .erbjudandeId(UUID.randomUUID().toString())
+            .id(yrkandeId)
+            .addRollerIYrkande(rollIYrkande)
+            .ingangtypId("TEST_INGANGTYP")
             .version(1)
             .yrkandeDatum(OffsetDateTime.now())
             .yrkandeFrom(OffsetDateTime.now())
@@ -38,7 +42,7 @@ public class RtfMaskinellTestData
             .id(UUID.randomUUID())
             .version(1)
             .yrkande(yrkande)
-            .processInstansId(UUID.randomUUID())
+            .handlaggningIdTyp("TEST_HANDLAGGNING_ID_TYP")
             .skapadTS(OffsetDateTime.now())
             .handlaggningspecifikationId(UUID.randomUUID())
             .build();
@@ -56,8 +60,8 @@ public class RtfMaskinellTestData
       var uppgift = ImmutableUppgift.builder()
             .id(UUID.randomUUID())
             .version(1)
-            .skapadTs(OffsetDateTime.now())
-            .utforarId(utforare)
+            .skapadTS(OffsetDateTime.now())
+            .utforare(utforare)
             .uppgiftStatus(null)
             .aktivitetId(UUID.randomUUID())
             .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace when correct value is available
