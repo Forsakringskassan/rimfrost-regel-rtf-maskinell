@@ -26,6 +26,7 @@ import se.fk.rimfrost.framework.handlaggning.model.Uppgiftsdatakopia;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelUtils;
+import se.fk.rimfrost.framework.regel.maskinell.logic.DmnService;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellErrorResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellSuccessResult;
@@ -177,21 +178,18 @@ public class RtfService implements RegelMaskinellServiceInterface
 
    private Utfall evaluteDmn(boolean folkbokford, boolean harAnstallning)
    {
+
       String namespace = "https://se.fk/github/maskinellregelratttillforsakring";
       String modelName = "RtfDecisionModel";
+      String resource = "dmn/RtfDecisionModel.dmn";
 
-      var dmnRuntime = dmnService.getRuntime();
-      var model = dmnRuntime.getModel(namespace, modelName);
-
-      var ctx = dmnRuntime.newContext();
-      ctx.set("folkbokford", folkbokford);
-      ctx.set("harAnstallning", harAnstallning);
-
-      var result = dmnRuntime.evaluateAll(model, ctx);
-      var raw = result.getDecisionResultByName("utfall").getResult();
-
-      String dmnValue = raw != null ? raw.toString() : "UTREDNING";
-      return mapRtf(dmnValue);
+      String dmnValue = dmnService.evaluation(resource, namespace, modelName)
+            .set("folkbokford", folkbokford)
+            .set("harAnstallning", harAnstallning)
+            .evaluateDecision("utfall")
+            .map(Object::toString)
+            .orElse("UTREDNING");
+       return mapRtf(dmnValue);
    }
 
    private Utfall mapRtf(String dmnValue)
