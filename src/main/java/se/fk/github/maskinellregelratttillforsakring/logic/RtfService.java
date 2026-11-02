@@ -189,7 +189,7 @@ public class RtfService implements RegelMaskinellServiceInterface
             .evaluateDecision("utfall")
             .map(Object::toString)
             .orElse("UTREDNING");
-       return mapRtf(dmnValue);
+      return mapRtf(dmnValue);
    }
 
    private Utfall mapRtf(String dmnValue)
