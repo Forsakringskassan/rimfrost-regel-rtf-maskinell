@@ -2,6 +2,33 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 1.1.8 (2026-11-03)
+
+### Bug Fixes
+
+-  update to use new framework-regel-maskinell (#102) ([352d6](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/352d6bb63bad8c3) NilsElveros)  
+-  **deps**  update dependency se.fk.rimfrost.adapter.folkbokford:rimfrost-adapter-folkbokford to v1.1.6 ([aba0b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/aba0b6237c4205f) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.adapter.arbetsgivare:rimfrost-adapter-arbetsgivare to v1.1.5 ([aca0d](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/aca0dc6356bbf27) renovate[bot])  
+
+### Dependency updates
+
+- update forsakringskassan/rimfrost-framework-regel action to v1.4.6 ([a183a](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/a183ae89c3739e3) renovate[bot])  
+- update forsakringskassan/.github digest to 625efb1 ([524a0](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/524a0ddb4e6c181) renovate[bot])  
+- update forsakringskassan/.github digest to 733eb32 ([bda2b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/bda2b44d3d4d56e) renovate[bot])  
+- update forsakringskassan/.github digest to cbd74f1 ([643ca](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/643cad25b9d8ba9) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.4.4 ([d0407](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/d0407997ed35c76) renovate[bot])  
+### Other changes
+
+**Fix/workflows (#106)**
+
+* fix: update workflows 
+* fix: keep validate-config 
+
+[e5055](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/e50552a8c1440d4) NilsElveros *2026-11-03 13:00:10*
+
+
+## rimfrost-1_2 (2026-09-23)
+
 ## 1.1.7 (2026-09-23)
 
 ### Bug Fixes
