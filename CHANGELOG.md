@@ -2,6 +2,24 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
+## 0.0.0 (2026-11-20)
+
+### Bug Fixes
+
+-  bump versions (#110) ([90427](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/904273cf4a8fc6c) NilsElveros)  
+-  **deps**  update dependency se.fk.rimfrost.adapter.arbetsgivare:rimfrost-adapter-arbetsgivare to v1.1.8 ([b1c01](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/b1c01460d0c1c8e) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel.maskinell:rimfrost-framework-regel-maskinell to v1.2.2 ([6d12b](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/6d12b97aa9a4254) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.adapter.folkbokford:rimfrost-adapter-folkbokford to v1.1.8 ([7cb31](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/7cb31c1fef1dd3f) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.adapter.arbetsgivare:rimfrost-adapter-arbetsgivare to v1.1.7 ([b2e92](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/b2e921678bebdf8) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel.maskinell:rimfrost-framework-regel-maskinell to v1.2.1 ([19036](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/190364c79a60932) renovate[bot])  
+
+### Dependency updates
+
+- update forsakringskassan/rimfrost-framework-regel action to v1.6.1 ([33b0e](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/33b0e9f2b28616b) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.6.0 ([308b2](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/308b27d7567d19c) renovate[bot])  
+- update forsakringskassan/.github digest to cbc0db8 ([59738](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/59738810fa0afa8) renovate[bot])  
+- update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.6.1 ([d9b6c](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/d9b6c77cc8bbbfe) renovate[bot])  
+- update forsakringskassan/rimfrost-framework-regel action to v1.5.0 ([1e803](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/1e8031d8b83cce7) renovate[bot])  
 ## 1.2.0 (2026-11-06)
 
 ### Features
