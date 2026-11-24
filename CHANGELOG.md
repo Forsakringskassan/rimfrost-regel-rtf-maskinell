@@ -2,7 +2,13 @@
 
 Changelog of rimfrost-regel-rtf-maskinell.
 
-## 0.0.0 (2026-11-20)
+## 1.2.1 (2026-11-22)
+
+### Dependency updates
+
+- update forsakringskassan/rimfrost-framework-regel action to v1.6.2 ([38f78](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/38f780e261804f1) renovate[bot])  
+- update forsakringskassan/.github digest to 1c8b290 ([260ce](https://github.com/Forsakringskassan/rimfrost-regel-rtf-maskinell/commit/260ceb282c2e4ed) renovate[bot])  
+## rimfrost-1_3 (2026-11-20)
 
 ### Bug Fixes
 
